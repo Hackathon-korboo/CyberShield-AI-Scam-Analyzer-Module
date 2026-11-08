@@ -181,6 +181,17 @@ def create_application() -> FastAPI:
     # --------------------------------------------------------------------------
 
     @app.get(
+        "/",
+        response_model=HealthCheckResponse,
+        status_code=status.HTTP_200_OK,
+        summary="Root Welcome & Health Check",
+        tags=["System"],
+    )
+    def root_welcome() -> HealthCheckResponse:
+        """Lightweight root endpoint for direct visits."""
+        return HealthCheckResponse()
+
+    @app.get(
         "/health",
         response_model=HealthCheckResponse,
         status_code=status.HTTP_200_OK,

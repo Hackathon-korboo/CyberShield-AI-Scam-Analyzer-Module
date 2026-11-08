@@ -1,10 +1,11 @@
 """CyberShield AI — Database Session Management (Part 19 + Production Hardening)
 
 Provides SQLAlchemy engine initialization, session lifecycle, and dependency injection.
-Supports local SQLite development and high-concurrency production PostgreSQL.
+Supports local SQLite development, Vercel /tmp fallback, and high-concurrency production PostgreSQL.
 """
 
 import logging
+import os
 from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
@@ -18,6 +19,10 @@ settings = get_settings()
 db_url = settings.database_url
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+# In serverless environments (Vercel/AWS Lambda) with SQLite, write to /tmp
+if db_url.startswith("sqlite") and (os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME")):
+    db_url = "sqlite:////tmp/cybershield.db"
 
 # Connect args & engine configuration
 connect_args = {}
