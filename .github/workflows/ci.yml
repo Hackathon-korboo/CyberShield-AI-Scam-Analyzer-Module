@@ -1,24 +1,29 @@
-name: CyberShield AI — Continuous Integration
+name: "CyberShield AI Continuous Integration"
 
 on:
   push:
     branches:
       - main
-      - 'feature/**'
+      - "feature/**"
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   backend-tests:
     name: Backend Test Suite (PyTest)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     env:
       ENVIRONMENT: test
       DEBUG: "true"
       DATABASE_URL: sqlite:///:memory:
-      AI_PROVIDER: heuristic
-      CORS_ORIGINS: "*"
+      AI_PRIMARY_PROVIDER: heuristic
+      API_AUTH_KEY: cybershield-auth-key-2026
+      CORS_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
       GROQ_API_KEY: ci_mock_groq_key
       GEMINI_API_KEY: ci_mock_gemini_key
       OPENAI_API_KEY: ci_mock_openai_key
@@ -29,18 +34,17 @@ jobs:
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: backend/requirements-dev.txt
+          python-version: "3.12"
 
-      - name: Install Backend Dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r backend/requirements-dev.txt
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio anyio
 
       - name: Run PyTest Suite
         run: |
-          pytest backend/tests -v --durations=10
+          python -m pytest tests -v --durations=10
 
   blockchain-tests:
     name: Blockchain Smart Contracts (Hardhat)
@@ -56,8 +60,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          cache-dependency-path: blockchain/package-lock.json
 
       - name: Install Hardhat Dependencies
         run: npm ci
@@ -84,8 +86,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
 
       - name: Install Frontend Dependencies
         run: npm ci
