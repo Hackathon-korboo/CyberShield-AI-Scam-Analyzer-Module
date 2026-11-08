@@ -1,0 +1,94 @@
+name: CyberShield AI — Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend-tests:
+    name: Backend Test Suite (PyTest)
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: test
+      DEBUG: "true"
+      DATABASE_URL: sqlite:///:memory:
+      AI_PROVIDER: heuristic
+      CORS_ORIGINS: "*"
+      GROQ_API_KEY: ci_mock_groq_key
+      GEMINI_API_KEY: ci_mock_gemini_key
+      OPENAI_API_KEY: ci_mock_openai_key
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements-dev.txt
+
+      - name: Install Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements-dev.txt
+
+      - name: Run PyTest Suite
+        run: |
+          pytest backend/tests -v --durations=10
+
+  blockchain-tests:
+    name: Blockchain Smart Contracts (Hardhat)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: blockchain
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: blockchain/package-lock.json
+
+      - name: Install Hardhat Dependencies
+        run: npm ci
+
+      - name: Compile Solidity Smart Contracts
+        run: npx hardhat compile
+
+      - name: Execute Smart Contract Test Suite
+        run: npx hardhat test
+
+  frontend-build:
+    name: Frontend Production Build (Vite & TypeScript)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      VITE_API_BASE_URL: https://cybershield-ai-api.vercel.app/api/v1
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - name: TypeScript Verification & Production Build
+        run: npm run build
