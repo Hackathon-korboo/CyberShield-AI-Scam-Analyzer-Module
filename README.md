@@ -48,6 +48,7 @@ CyberShield AI provides a deterministic, multi-layered cyber defense architectur
 
 - **Live Web Application:** [https://cybershield-ai-web-roan.vercel.app/](https://cybershield-ai-web-roan.vercel.app/)
 - **Demo Video (YouTube):** [https://www.youtube.com/watch?v=lfhW9cDFUoQ](https://www.youtube.com/watch?v=lfhW9cDFUoQ)
+- **Pitch Deck (Google Slides):** [https://docs.google.com/presentation/d/1l2FFL4MJXGz0swuMja2GU000gXh_SwTk/edit?usp=sharing&ouid=108521845992462704765&rtpof=true&sd=true](https://docs.google.com/presentation/d/1l2FFL4MJXGz0swuMja2GU000gXh_SwTk/edit?usp=sharing&ouid=108521845992462704765&rtpof=true&sd=true)
 - **Official GitHub Repository:** [https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module](https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module)
 - **Live Production API Gateway:** [https://cybershield-ai-api.vercel.app/](https://cybershield-ai-api.vercel.app/)
 - **Interactive Swagger Documentation:** [https://cybershield-ai-api.vercel.app/docs](https://cybershield-ai-api.vercel.app/docs)

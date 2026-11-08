@@ -94,6 +94,6 @@ When completing the HackMatrix online form:
 - **Track:** AI / Web3 / Cybersecurity & Digital Trust Track *(Pending confirmation in team leader dashboard)*
 - **Problem Statement:** AI-Powered Web Threat Detection & Digital Trust Intelligence
 - **Demo Video Link:** `https://www.youtube.com/watch?v=lfhW9cDFUoQ` (Hackathon Demonstration Walkthrough)
-- **Pitch Deck:** `OPTIONAL — NOT SUBMITTED` (Per team decision based on official HackMatrix guidelines)
+- **Pitch Deck Link:** `https://docs.google.com/presentation/d/1l2FFL4MJXGz0swuMja2GU000gXh_SwTk/edit?usp=sharing&ouid=108521845992462704765&rtpof=true&sd=true` (Google Slides presentation)
 - **Project Documentation Link:** Google Docs / Notion export of [`docs/HACKMATRIX_PROJECT_WRITEUP.md`](HACKMATRIX_PROJECT_WRITEUP.md)
 - **Short Description:** See [`docs/HACKMATRIX_SHORT_DESCRIPTION.md`](HACKMATRIX_SHORT_DESCRIPTION.md)

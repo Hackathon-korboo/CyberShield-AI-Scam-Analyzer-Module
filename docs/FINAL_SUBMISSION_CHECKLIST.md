@@ -23,7 +23,7 @@
 | **Short Description** | ≤ 1,000 Characters | 897 characters in `docs/HACKMATRIX_SHORT_DESCRIPTION.md` | ✅ PASS |
 | **Full Project Write-Up** | Comprehensive | Markdown write-up in `docs/HACKMATRIX_PROJECT_WRITEUP.md` | ✅ PASS |
 | **Demo Video URL** | Public YouTube Video | `https://www.youtube.com/watch?v=lfhW9cDFUoQ` (Hackathon Demonstration Walkthrough) | ✅ PASS |
-| **Pitch Deck URL** | Optional Asset | `OPTIONAL — NOT SUBMITTED` (Per team decision under HackMatrix guidelines) | ⚪ OPTIONAL |
+| **Pitch Deck URL** | Google Slides | `https://docs.google.com/presentation/d/1l2FFL4MJXGz0swuMja2GU000gXh_SwTk/edit?usp=sharing&ouid=108521845992462704765&rtpof=true&sd=true` | ✅ PASS |
 | **Project Write-Up URL** | Google Docs / Notion | Ready to export from `docs/HACKMATRIX_PROJECT_WRITEUP.md` | ✅ PASS |
 | **Automated Test Results** | Verified 100% | 415 Backend Pytest + 29 Hardhat = **444 / 444 Passing** | ✅ PASS |
 | **Frontend Production Build** | Zero Errors | 2,162 Vite modules bundled in 10.25s | ✅ PASS |
@@ -75,7 +75,9 @@ Follow these exact steps to complete the official submission:
    https://www.youtube.com/watch?v=lfhW9cDFUoQ
    ```
 9. **Pitch Deck Link:**
-   - *Optional:* Leave blank per confirmed team decision under HackMatrix guidelines.
+   ```
+   https://docs.google.com/presentation/d/1l2FFL4MJXGz0swuMja2GU000gXh_SwTk/edit?usp=sharing&ouid=108521845992462704765&rtpof=true&sd=true
+   ```
 
 ### Step 3: Incognito Session Public Verification
 Before finalizing:
@@ -84,7 +86,8 @@ Before finalizing:
   - [x] GitHub Repository: `https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module`
   - [x] Live Website: `https://cybershield-ai-web-roan.vercel.app/`
   - [x] Backend Health: `https://cybershield-ai-api.vercel.app/api/v1/health`
-  - [x] Demo Video: `https://www.youtube.com/watch?v=lfhW9cDFUoQ`
+  - [x] Demo Video: `https://www.youtube.com/watch?v=lfhW9cDFUoQ` (Duration: 2m 50s)
+  - [x] Pitch Deck: `https://docs.google.com/presentation/d/1l2FFL4MJXGz0swuMja2GU000gXh_SwTk/preview` (Verified Public View)
 
 ### Step 4: Final Submission
 - Click **Save Draft** first.
