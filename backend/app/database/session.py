@@ -1,33 +1,55 @@
-"""CyberShield AI — Database Session Management (Part 19)
+"""CyberShield AI — Database Session Management (Part 19 + Production Hardening)
 
 Provides SQLAlchemy engine initialization, session lifecycle, and dependency injection.
+Supports local SQLite development and high-concurrency production PostgreSQL.
 """
 
+import logging
 from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from app.core.config import get_settings
 from app.database.models import Base
 
+logger = logging.getLogger("cybershield.database")
 settings = get_settings()
 
-# Connect args: check_same_thread=False is required for SQLite in multi-threaded FastAPI
+# Normalize Heroku/Neon legacy postgres:// to postgresql://
+db_url = settings.database_url
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+# Connect args & engine configuration
 connect_args = {}
-if settings.database_url.startswith("sqlite"):
+engine_kwargs = {
+    "pool_pre_ping": True,
+}
+
+if db_url.startswith("sqlite"):
     connect_args["check_same_thread"] = False
+else:
+    # Managed PostgreSQL configuration (e.g. Neon, Supabase, RDS)
+    # Recycle connections after 5 minutes to prevent stale serverless connections
+    engine_kwargs["pool_recycle"] = 300
+    engine_kwargs["pool_size"] = 5
+    engine_kwargs["max_overflow"] = 10
 
 engine = create_engine(
-    settings.database_url,
+    db_url,
     connect_args=connect_args,
-    pool_pre_ping=True,
+    **engine_kwargs
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def init_db() -> None:
-    """Initialize database tables."""
-    Base.metadata.create_all(bind=engine)
+    """Initialize database tables with safety handling for transient failures."""
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database schema initialized successfully.")
+    except Exception as exc:
+        logger.warning("Database schema creation deferred or non-fatal failure: %s", exc)
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -37,4 +59,3 @@ def get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
-
