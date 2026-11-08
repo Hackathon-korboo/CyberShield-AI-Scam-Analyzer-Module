@@ -20,7 +20,7 @@ jobs:
     env:
       ENVIRONMENT: "test"
       DEBUG: "true"
-      DATABASE_URL: "sqlite:///:memory:"
+      DATABASE_URL: "sqlite:///./cybershield_test.db"
       AI_PRIMARY_PROVIDER: "heuristic"
       API_AUTH_KEY: "cybershield-auth-key-2026"
       CORS_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
