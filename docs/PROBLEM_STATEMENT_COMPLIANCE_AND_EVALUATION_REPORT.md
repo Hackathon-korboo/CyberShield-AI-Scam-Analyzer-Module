@@ -1,7 +1,7 @@
 # CyberShield AI — Official Problem Statement Compliance Audit & Hackathon Evaluation Report
 
 **Document Title:** Official Hackathon Compliance, Requirement Matching & Technical Evaluation  
-**Target Project:** `D:\Adamas Hackathon\CyberShield_AI_Final_Integration`  
+**Target Project:** `D:\My Created Projects\CyberShield_AI_Version_2-main`  
 **Reference Document:** `AI-Powered Web Threat Detection & Digital Trust Intelligence.pdf` (Adamas Hackathon 2026)  
 **Evaluation Date:** November 8, 2026  
 **Evaluator Roles:** Independent Hackathon Technical Evaluator, Senior Cybersecurity Architect, AI Integration Engineer, Blockchain Auditor, Full-Stack Reviewer  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary & Official Scorecard
 
-An independent, evidence-based technical audit was conducted on the integrated CyberShield AI project (`D:\Adamas Hackathon\CyberShield_AI_Final_Integration`) against the 12-page official hackathon problem statement.
+An independent, evidence-based technical audit was conducted on the integrated CyberShield AI project (`D:\My Created Projects\CyberShield_AI_Version_2-main`) against the 12-page official hackathon problem statement.
 
 The audit verified actual source code implementation, executed automated unit and regression suites, inspected API endpoints, ran live EVM smart contract transactions, and reviewed frontend dashboard workflows.
 
@@ -60,7 +60,7 @@ The official problem statement (`AI-Powered Web Threat Detection & Digital Trust
 
 ## 3. Project Architecture Overview
 
-The integrated project at `D:\Adamas Hackathon\CyberShield_AI_Final_Integration` directly implements the problem statement's modular architecture:
+The integrated project at `D:\My Created Projects\CyberShield_AI_Version_2-main` directly implements the problem statement's modular architecture:
 
 ```
                             ┌───────────────────────────────────┐

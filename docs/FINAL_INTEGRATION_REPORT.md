@@ -1,6 +1,6 @@
 # CyberShield AI — Master Final Four-Member Integration Report
 **Project:** CyberShield AI  
-**Integration Output Directory:** `D:\Adamas Hackathon\CyberShield_AI_Final_Integration`  
+**Integration Output Directory:** `D:\My Created Projects\CyberShield_AI_Version_2-main`  
 **Date:** November 8, 2026  
 **Integrator Roles:** Senior Full-Stack Engineer, AI Integration Engineer, Backend Architect, Blockchain Engineer, QA Engineer  
 
@@ -14,7 +14,7 @@ This project represents the complete, verified, and runnable integration of all 
 - **Member 3 (Blockchain & Smart Contracts):** `ThreatReportRegistry.sol` Solidity contract, 29-case Hardhat verification suite, Web3.py adapter client, cross-language canonical hash consistency, and tamper-proof audit verification.
 - **Member 4 (Frontend UI, Threat Intel & Master Orchestration):** Modern React 18 + TypeScript + Vite + Tailwind CSS dashboard featuring an interactive Three.js 3D ceramic security robot, live threat intelligence integrations (URLhaus, PhishTank), scan history, and cryptographic report verification modals.
 
-All four source projects were strictly preserved in their original directories without modification or data loss. The final integrated project resides exclusively in `D:\Adamas Hackathon\CyberShield_AI_Final_Integration`.
+All four source projects were strictly preserved in their original directories without modification or data loss. The final integrated project resides exclusively in `D:\My Created Projects\CyberShield_AI_Version_2-main`.
 
 ---
 
@@ -99,7 +99,7 @@ All automated regression suites were executed directly from the final workspace:
 ## 6. Project Structure Overview
 
 ```
-D:\Adamas Hackathon\CyberShield_AI_Final_Integration\
+D:\My Created Projects\CyberShield_AI_Version_2-main\
 ├── .env.example                       <- Unified environment variables template
 ├── .gitignore                         <- Security and build artifact exclusions
 ├── README.md                          <- Project overview, setup, and run instructions
@@ -143,14 +143,14 @@ D:\Adamas Hackathon\CyberShield_AI_Final_Integration\
 
 ### Step 1: Environment Setup
 ```powershell
-cd "D:\Adamas Hackathon\CyberShield_AI_Final_Integration"
+cd "D:\My Created Projects\CyberShield_AI_Version_2-main"
 Copy-Item .env.example backend\.env
 Copy-Item .env.example frontend\.env
 ```
 
 ### Step 2: (Optional) Start Local EVM Blockchain Node
 ```powershell
-cd "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\blockchain"
+cd "D:\My Created Projects\CyberShield_AI_Version_2-main\blockchain"
 npx.cmd hardhat node
 # In a separate terminal, deploy contract:
 # npx.cmd hardhat run scripts/deploy.js --network localhost
@@ -158,14 +158,14 @@ npx.cmd hardhat node
 
 ### Step 3: Start FastAPI Backend Server
 ```powershell
-cd "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\backend"
+cd "D:\My Created Projects\CyberShield_AI_Version_2-main\backend"
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 *API will be operational at `http://127.0.0.1:8000` with Swagger docs at `http://127.0.0.1:8000/docs`.*
 
 ### Step 4: Start Frontend Development Server
 ```powershell
-cd "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\frontend"
+cd "D:\My Created Projects\CyberShield_AI_Version_2-main\frontend"
 npm.cmd run dev
 ```
 *Frontend interface will be available at `http://localhost:5173`.*

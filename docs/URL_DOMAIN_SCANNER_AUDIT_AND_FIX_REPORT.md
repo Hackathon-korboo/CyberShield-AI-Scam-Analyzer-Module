@@ -1,6 +1,6 @@
 # CYBERSHIELD AI — URL & DOMAIN REPUTATION SCANNER AUDIT & FIX REPORT
 **Authoritative Forensic Investigation, Bug Remediation, and 18-Scenario Regression Report**  
-**Date:** 08 November 2026 | **Workspace:** `D:\Adamas Hackathon\CyberShield_AI_Final_Integration`  
+**Date:** 08 November 2026 | **Workspace:** `D:\My Created Projects\CyberShield_AI_Version_2-main`  
 **Status:** **RESOLVED & VERIFIED** (415/415 Pytest Tests Passing, 29/29 Hardhat Tests Passing, Frontend Clean Build)
 
 ---
@@ -134,7 +134,7 @@ Every scenario was executed against the live CyberShield AI API with verifiable 
 
 ### 5.1 URL Scanner Dedicated Regression Suite
 ```powershell
-python -m pytest "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\backend\tests\test_url_scanner_audit.py" -v
+python -m pytest "D:\My Created Projects\CyberShield_AI_Version_2-main\backend\tests\test_url_scanner_audit.py" -v
 ```
 **Terminal Output:**
 ```
@@ -161,7 +161,7 @@ CyberShield_AI_Final_Integration/backend/tests/test_url_scanner_audit.py::TestUR
 
 ### 5.2 Complete Backend Pytest Suite
 ```powershell
-python -m pytest "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\backend\tests" -q
+python -m pytest "D:\My Created Projects\CyberShield_AI_Version_2-main\backend\tests" -q
 ```
 **Terminal Output:**
 ```
@@ -174,7 +174,7 @@ python -m pytest "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\backend\t
 
 ### 5.3 Blockchain Smart Contract Suite
 ```powershell
-cd "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\blockchain"
+cd "D:\My Created Projects\CyberShield_AI_Version_2-main\blockchain"
 npx.cmd hardhat test
 ```
 **Terminal Output:**
@@ -184,7 +184,7 @@ npx.cmd hardhat test
 
 ### 5.4 Frontend Production Build
 ```powershell
-cd "D:\Adamas Hackathon\CyberShield_AI_Final_Integration\frontend"
+cd "D:\My Created Projects\CyberShield_AI_Version_2-main\frontend"
 npm.cmd run build
 ```
 **Terminal Output:**

@@ -11,7 +11,7 @@
 
 CyberShield AI is an autonomous, enterprise-grade cybersecurity analysis platform engineered to protect organizations and digital citizens against modern web threats, AI-generated social engineering, and fraudulent websites. By synthesizing preflight network forensics, multi-tier generative AI scam reasoning, and decentralized blockchain cryptographic verification, CyberShield AI establishes a complete, zero-trust digital intelligence pipeline.
 
-The platform provides end users with an intuitive, interactive React 18 / Three.js 3D interface, and exposes a high-throughput FastAPI backend capable of processing thousands of forensic investigations with sub-second response times, zero hallucinations, and decentralized audit immutability.
+The platform provides end users with an intuitive, interactive React 18 / Three.js 3D interface, and exposes a robust FastAPI backend capable of processing forensic investigations with rapid response times, ground-truth evidence validation to minimize model hallucinations, and decentralized audit immutability.
 
 ---
 

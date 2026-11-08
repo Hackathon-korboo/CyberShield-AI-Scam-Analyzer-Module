@@ -2,7 +2,7 @@
 
 **Document Title:** Root Cause Investigation, Technical Trace, Evidence-Based Calibration & Regression Audit  
 **Target Module:** CyberShield AI Message Intelligence & Scam Analyzer  
-**Workspace:** `D:\Adamas Hackathon\CyberShield_AI_Final_Integration`  
+**Workspace:** `D:\My Created Projects\CyberShield_AI_Version_2-main`  
 **Date of Audit:** November 8, 2026  
 **Auditor Roles:** Senior Full-Stack Engineer, AI Integration Engineer, Cybersecurity Architect, QA Lead  
 
@@ -287,13 +287,13 @@ The Message Intelligence pipeline operates through the following sequence:
 ## 6. Regression Testing & Execution Evidence
 
 An exhaustive automated regression test suite was created in:  
-`D:\Adamas Hackathon\CyberShield_AI_Final_Integration\backend\tests\test_message_intelligence_audit.py`
+`D:\My Created Projects\CyberShield_AI_Version_2-main\backend\tests\test_message_intelligence_audit.py`
 
 ### Test Suite Execution Output
 ```
 ============================= test session starts =============================
 platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0
-rootdir: D:\Adamas Hackathon\CyberShield_AI_Final_Integration\backend
+rootdir: D:\My Created Projects\CyberShield_AI_Version_2-main\backend
 collected 12 items
 
 tests/test_message_intelligence_audit.py::TestAuditThreeExactEmails::test_exact_email_1_fake_job_offer PASSED [  8%]

@@ -22,8 +22,9 @@
 | **Application Screenshot** | Real / Verified | Genuine Chrome headless capture saved at `docs/screenshot.png` | ✅ PASS |
 | **Short Description** | ≤ 1,000 Characters | 989 characters in `docs/HACKMATRIX_SHORT_DESCRIPTION.md` | ✅ PASS |
 | **Full Project Write-Up** | Comprehensive | Markdown write-up in `docs/HACKMATRIX_PROJECT_WRITEUP.md` | ✅ PASS |
-| **Pitch Deck Presentation** | 11 Widescreen Slides | Editable `.pptx` in `docs/CyberShield_AI_Pitch_Deck.pptx` | ✅ PASS |
-| **Pitch Deck Markdown** | Slide-by-slide text | Formatted for Google Slides in `docs/PITCH_DECK_SLIDES.md` | ✅ PASS |
+| **Pitch Deck URL** | Shareable Link | `PENDING — awaiting presentation link from teammate` (Prepared in `docs/PITCH_DECK_SLIDES.md`) | ⏳ PENDING |
+| **Demo Video URL** | Public/Unlisted Video | `PENDING — awaiting demo video link from teammate` (3-minute demo from teammate) | ⏳ PENDING |
+| **Project Write-Up URL** | Google Docs / Notion | Ready to export from `docs/HACKMATRIX_PROJECT_WRITEUP.md` | ✅ PASS |
 | **Automated Test Results** | Verified 100% | 415 Backend Pytest + 29 Hardhat = **444 / 444 Passing** | ✅ PASS |
 | **Frontend Production Build** | Zero Errors | 2,162 Vite modules bundled in 10.25s | ✅ PASS |
 | **GitHub Actions CI** | Active Workflow | Configured at `.github/workflows/ci.yml` | ✅ PASS |
@@ -91,3 +92,11 @@ Before finalizing:
 - Review all form inputs one final time with your team.
 - When prompted, type `SUBMIT` to lock in your final HackMatrix 2026 entry.
 - Once submitted, take a screenshot of the submission confirmation screen for your team records.
+
+---
+
+## 3. Important Round Deadlines Reminder
+
+- **Online Round Submission Deadline:** **10 November 2026 @ 10:00 PM IST** (HackMatrix Dashboard)
+- **Offline Round Date & Portal:** **14 November 2026** (Conducted via MLH portal; stated deadline 7:00 PM IST)
+- *Note:* Do not confuse the online HackMatrix submission dashboard with the offline MLH portal. Both must be tracked separately.

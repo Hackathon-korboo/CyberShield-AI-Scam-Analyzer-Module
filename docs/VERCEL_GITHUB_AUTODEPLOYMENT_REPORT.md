@@ -11,10 +11,10 @@
 
 CyberShield AI is configured as a dual-project architecture on Vercel:
 
-| Service Layer | Vercel Project Name | Root Directory | Framework Preset | Production URL | GitHub Auto-Deploy |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Frontend Web UI** | `cybershield-ai-web` | `frontend` | Vite | **[cybershield-ai-web-roan.vercel.app](https://cybershield-ai-web-roan.vercel.app)** | **CONNECTED & ACTIVE** |
-| **FastAPI Backend** | `cybershield-ai-api` | `backend` | FastAPI | **[cybershield-ai-api.vercel.app](https://cybershield-ai-api.vercel.app)** | **CONNECTED & ACTIVE** |
+| Service Layer | Vercel Project Name | Root Directory | Framework Preset | Production URL | GitHub Auto-Deploy | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :---: |
+| **Frontend Web UI** | `cybershield-ai-web` | `frontend` | Vite | **[cybershield-ai-web-roan.vercel.app](https://cybershield-ai-web-roan.vercel.app)** | Connected to `main` | `VERIFIED` |
+| **FastAPI Backend** | `cybershield-ai-api` | `backend` | FastAPI | **[cybershield-ai-api.vercel.app](https://cybershield-ai-api.vercel.app)** | Connected to `main` | `VERIFIED` |
 
 ---
 
@@ -66,9 +66,18 @@ Both projects are connected directly to the official HackMatrix repository via t
 
 ---
 
-## 4. Manual Verification & Dashboard Confirmation
+## 4. Database Storage & Ephemeral File System Notice
+
+- **Current State (`VERIFIED`):** The deployed FastAPI serverless function uses zero-config SQLite persistence (automatically stored in `/tmp/cybershield.db`).
+- **Operational Reality:** In serverless cloud execution (Vercel Fluid Compute), instances spin up and down dynamically. Local `/tmp` filesystem storage is ephemeral across cold starts and not shared across horizontal worker instances.
+- **Production Recommendation (`OPTIONAL / REQUIRES MANUAL ACCESS`):** For permanent, persistent multi-instance scan history and enterprise report lookups across days and weeks, a managed cloud PostgreSQL database (e.g. Neon, Supabase, or AWS RDS) should be provisioned and configured in Vercel environment variables as `DATABASE_URL`. The CyberShield AI backend code already includes native PostgreSQL connection pooling, SSL normalization, and automated table creation.
+
+---
+
+## 5. Manual Verification & Dashboard Confirmation
 
 To view deployment progress and build logs in the web interface:
 1. Navigate to [Vercel Dashboard](https://vercel.com/souvik-s-projects4).
 2. Click on **`cybershield-ai-web`** or **`cybershield-ai-api`**.
 3. Under the **Deployments** tab, verified builds will show the Git commit message and hash linked to `Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module`.
+4. Webhook triggers from GitHub are marked `VERIFIED`.

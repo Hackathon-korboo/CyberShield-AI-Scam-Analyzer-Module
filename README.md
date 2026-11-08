@@ -44,13 +44,14 @@ CyberShield AI provides a deterministic, multi-layered cyber defense architectur
 
 ## 4. Demo Links and Screenshot
 
-### Live Deployments
+### Project Links & Media Assets
 
 - **Live Web Application:** [https://cybershield-ai-web-roan.vercel.app/](https://cybershield-ai-web-roan.vercel.app/)
+- **Official GitHub Repository:** [https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module](https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module)
 - **Live Production API Gateway:** [https://cybershield-ai-api.vercel.app/](https://cybershield-ai-api.vercel.app/)
 - **Interactive Swagger Documentation:** [https://cybershield-ai-api.vercel.app/docs](https://cybershield-ai-api.vercel.app/docs)
-- **Live System Diagnostics Endpoint:** [https://cybershield-ai-api.vercel.app/api/v1/system/status](https://cybershield-ai-api.vercel.app/api/v1/system/status)
-- **Official GitHub Repository:** [https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module](https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module)
+- **Pitch Deck Presentation:** `PENDING — awaiting presentation link from teammate`
+- **Demo Video:** `PENDING — awaiting demo video link from teammate`
 
 ### Application Screenshot
 
@@ -275,6 +276,7 @@ In accordance with HackMatrix hackathon guidelines, all external resources, libr
 
 - **Hackathon:** **HackMatrix 2026**
 - **Selected Track:** **AI / Web3 / Cybersecurity & Digital Trust Track**
+  *(Status: Targeted track; team leader must confirm exact dashboard selection upon final form lock).*
 - **Problem Statement:** *AI-Powered Web Threat Detection & Digital Trust Intelligence*
 - **Primary Objective:** Build an autonomous, transparent security platform that detects advanced web threats and AI-driven phishing attacks while guaranteeing forensic report immutability through decentralized blockchain verification.
 

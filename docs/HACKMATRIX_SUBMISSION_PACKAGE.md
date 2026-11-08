@@ -91,7 +91,9 @@ When completing the HackMatrix online form:
 - **Project Title:** CyberShield AI
 - **Repository URL:** `https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module`
 - **Live Demo URL:** `https://cybershield-ai-web-roan.vercel.app/`
-- **Track:** AI / Web3 / Cybersecurity & Digital Trust Track
+- **Track:** AI / Web3 / Cybersecurity & Digital Trust Track *(Pending confirmation in team leader dashboard)*
 - **Problem Statement:** AI-Powered Web Threat Detection & Digital Trust Intelligence
-- **Pitch Deck Link:** `docs/CyberShield_AI_Pitch_Deck.pptx` (and `docs/PITCH_DECK_SLIDES.md`)
+- **Pitch Deck Link:** `PENDING — awaiting presentation link from teammate` (Prepared slide outline available in `docs/PITCH_DECK_SLIDES.md`)
+- **Demo Video Link:** `PENDING — awaiting demo video link from teammate`
+- **Project Documentation Link:** Google Docs / Notion export of [`docs/HACKMATRIX_PROJECT_WRITEUP.md`](HACKMATRIX_PROJECT_WRITEUP.md)
 - **Short Description:** See [`docs/HACKMATRIX_SHORT_DESCRIPTION.md`](HACKMATRIX_SHORT_DESCRIPTION.md)

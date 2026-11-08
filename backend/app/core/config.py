@@ -115,7 +115,10 @@ class Settings(BaseModel):
 
     # API Security & Authentication (Member 1 / Member 4)
     api_auth_key: str = Field(
-        default_factory=lambda: os.getenv("API_AUTH_KEY", "cybershield-auth-key-2026")
+        default_factory=lambda: os.getenv(
+            "API_AUTH_KEY",
+            "" if os.getenv("ENVIRONMENT", "").lower() == "production" else "cybershield-dev-key"
+        )
     )
 
     # Uppercase aliases for compatibility with Member 2 / Member 4 modules
