@@ -18,15 +18,15 @@ jobs:
       run:
         working-directory: backend
     env:
-      ENVIRONMENT: test
+      ENVIRONMENT: "test"
       DEBUG: "true"
-      DATABASE_URL: sqlite:///:memory:
-      AI_PRIMARY_PROVIDER: heuristic
-      API_AUTH_KEY: cybershield-auth-key-2026
+      DATABASE_URL: "sqlite:///:memory:"
+      AI_PRIMARY_PROVIDER: "heuristic"
+      API_AUTH_KEY: "cybershield-auth-key-2026"
       CORS_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
-      GROQ_API_KEY: ci_mock_groq_key
-      GEMINI_API_KEY: ci_mock_gemini_key
-      OPENAI_API_KEY: ci_mock_openai_key
+      GROQ_API_KEY: "ci_mock_groq_key"
+      GEMINI_API_KEY: "ci_mock_gemini_key"
+      OPENAI_API_KEY: "ci_mock_openai_key"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
       - name: Install Hardhat Dependencies
         run: npm ci
@@ -77,7 +77,7 @@ jobs:
       run:
         working-directory: frontend
     env:
-      VITE_API_BASE_URL: https://cybershield-ai-api.vercel.app/api/v1
+      VITE_API_BASE_URL: "https://cybershield-ai-api.vercel.app/api/v1"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -85,7 +85,7 @@ jobs:
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
       - name: Install Frontend Dependencies
         run: npm ci
