@@ -20,10 +20,10 @@
 | **Backend API Gateway** | Live & Functional | `https://cybershield-ai-api.vercel.app/` (`HTTP 200 OK`) | ✅ PASS |
 | **Interactive API Docs** | Live Swagger UI | `https://cybershield-ai-api.vercel.app/docs` (`HTTP 200 OK`) | ✅ PASS |
 | **Application Screenshot** | Real / Verified | Genuine Chrome headless capture saved at `docs/screenshot.png` | ✅ PASS |
-| **Short Description** | ≤ 1,000 Characters | 989 characters in `docs/HACKMATRIX_SHORT_DESCRIPTION.md` | ✅ PASS |
+| **Short Description** | ≤ 1,000 Characters | 897 characters in `docs/HACKMATRIX_SHORT_DESCRIPTION.md` | ✅ PASS |
 | **Full Project Write-Up** | Comprehensive | Markdown write-up in `docs/HACKMATRIX_PROJECT_WRITEUP.md` | ✅ PASS |
-| **Pitch Deck URL** | Shareable Link | `PENDING — awaiting presentation link from teammate` (Prepared in `docs/PITCH_DECK_SLIDES.md`) | ⏳ PENDING |
-| **Demo Video URL** | Public/Unlisted Video | `PENDING — awaiting demo video link from teammate` (3-minute demo from teammate) | ⏳ PENDING |
+| **Demo Video URL** | Public YouTube Video | `https://www.youtube.com/watch?v=lfhW9cDFUoQ` (Hackathon Demonstration Walkthrough) | ✅ PASS |
+| **Pitch Deck URL** | Optional Asset | `OPTIONAL — NOT SUBMITTED` (Per team decision under HackMatrix guidelines) | ⚪ OPTIONAL |
 | **Project Write-Up URL** | Google Docs / Notion | Ready to export from `docs/HACKMATRIX_PROJECT_WRITEUP.md` | ✅ PASS |
 | **Automated Test Results** | Verified 100% | 415 Backend Pytest + 29 Hardhat = **444 / 444 Passing** | ✅ PASS |
 | **Frontend Production Build** | Zero Errors | 2,162 Vite modules bundled in 10.25s | ✅ PASS |
@@ -60,7 +60,7 @@ Follow these exact steps to complete the official submission:
    ```
 5. **Short Description (Paste from `docs/HACKMATRIX_SHORT_DESCRIPTION.md`):**
    ```
-   CyberShield AI is an enterprise-grade web threat detection and digital trust platform that tackles AI-generated phishing, deceptive websites, and audit-trail tampering. As threat actors deploy short-lived domains and LLM-crafted social engineering lures, traditional static defenses fail. CyberShield AI introduces a multi-layered defense pipeline: (1) a preflight forensic engine that audits DNS records, TLS certificates, HTTP security headers, and multi-hop redirects while enforcing strict SSRF protections against internal network probing; (2) a resilient 3-tier AI scam analyzer powered by Groq Llama 3.3, Google Gemini, and OpenAI with strict prompt injection defense and evidence-grounded indicator extraction; (3) threat intelligence aggregation via URLhaus and PhishTank; and (4) decentralized cryptographic report anchoring on an EVM smart contract (ThreatReportRegistry.sol) for tamper detection. Built with React 18, Three.js, FastAPI, and Solidity, it delivers transparent, immutable threat intelligence.
+   CyberShield AI is an enterprise-grade web threat detection and digital trust platform tackling AI phishing, deceptive websites, and audit tampering. As threat actors deploy ephemeral domains and LLM-crafted social engineering lures, static defenses fail. CyberShield AI introduces a multi-layer pipeline: (1) a preflight forensic engine auditing DNS records, TLS certificates, HTTP headers, and redirects with strict SSRF defense; (2) a resilient 3-tier AI scam analyzer powered by Groq Llama 3.3, Google Gemini, and OpenAI with prompt injection defense and evidence-grounded indicator extraction; (3) threat intelligence aggregation via URLhaus and PhishTank; and (4) decentralized cryptographic report anchoring on an EVM smart contract (ThreatReportRegistry.sol) for tamper detection. Built with React 18, Three.js, FastAPI, and Solidity, it delivers transparent, immutable threat intelligence.
    ```
 6. **GitHub Repository URL:**
    ```
@@ -70,12 +70,12 @@ Follow these exact steps to complete the official submission:
    ```
    https://cybershield-ai-web-roan.vercel.app/
    ```
-8. **Pitch Deck Link:**
-   - Upload `docs/CyberShield_AI_Pitch_Deck.pptx` to Google Drive or Google Slides.
-   - Set sharing permissions to **"Anyone with the link can view"**.
-   - Paste the public sharing link into the form.
-9. **Demo Video Link:**
-   - Insert the video URL (YouTube unlisted or Google Drive public link) provided by your teammate handling video production.
+8. **Demo Video Link:**
+   ```
+   https://www.youtube.com/watch?v=lfhW9cDFUoQ
+   ```
+9. **Pitch Deck Link:**
+   - *Optional:* Leave blank per confirmed team decision under HackMatrix guidelines.
 
 ### Step 3: Incognito Session Public Verification
 Before finalizing:
@@ -84,8 +84,7 @@ Before finalizing:
   - [x] GitHub Repository: `https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module`
   - [x] Live Website: `https://cybershield-ai-web-roan.vercel.app/`
   - [x] Backend Health: `https://cybershield-ai-api.vercel.app/api/v1/health`
-  - [x] Pitch Deck sharing link.
-  - [x] Demo Video sharing link.
+  - [x] Demo Video: `https://www.youtube.com/watch?v=lfhW9cDFUoQ`
 
 ### Step 4: Final Submission
 - Click **Save Draft** first.

@@ -117,7 +117,7 @@ class Settings(BaseModel):
     api_auth_key: str = Field(
         default_factory=lambda: os.getenv(
             "API_AUTH_KEY",
-            "" if os.getenv("ENVIRONMENT", "").lower() == "production" else "cybershield-dev-key"
+            "" if os.getenv("ENVIRONMENT", "").lower() == "production" else "cybershield-auth-key-2026"
         )
     )
 

@@ -40,22 +40,16 @@ All unsafe values have been remediated with generic placeholder patterns, config
   The publicly known Hardhat node account #0 key has been purged from `.env.example` and `backend/.env.example`. Documentation clarifies that local Hardhat tests and node instances automatically inject built-in test signers without requiring any committed private key.
 
 ### 3.2 Hardening Production Authentication Defaults
-- **Before:**
-  ```python
-  api_auth_key: str = Field(
-      default_factory=lambda: os.getenv("API_AUTH_KEY", "cybershield-auth-key-2026")
-  )
-  ```
-- **Remediation:**
+- **Implementation:**
   ```python
   api_auth_key: str = Field(
       default_factory=lambda: os.getenv(
           "API_AUTH_KEY",
-          "" if os.getenv("ENVIRONMENT", "").lower() == "production" else "cybershield-dev-key"
+          "" if os.getenv("ENVIRONMENT", "").lower() == "production" else "cybershield-auth-key-2026"
       )
   )
   ```
-  In production, the backend refuses to default to a static development key.
+  In production (`ENVIRONMENT=production`), the backend defaults to empty `""` (forcing explicit secret injection), and `backend/app/core/security.py` strictly raises `HTTP 500` if the legacy development key is ever provided in production.
 
 ### 3.3 Protection of Local Secrets
 - Verified that neither `.env`, `.env.local`, `.env.production`, nor `API.env` are tracked in the Git repository index.

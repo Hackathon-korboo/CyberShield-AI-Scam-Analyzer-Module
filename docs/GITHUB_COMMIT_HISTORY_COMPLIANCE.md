@@ -22,6 +22,20 @@ In strict accordance with the HackMatrix Rules of Conduct and ethical software d
 The following is the verbatim commit log on branch `main` of the official submission repository:
 
 ```
+commit 28d077b27a647ab28165bf35ad893213536d925b
+Author:     Souvik Saha <tsaha5005@gmail.com>
+AuthorDate: Mon Nov 9 02:17:31 2026 +0530
+CommitDate: Mon Nov 9 02:17:31 2026 +0530
+
+    chore(security): purge hardcoded secrets, remove root doc duplicates, harden config defaults, and update audit reports
+
+commit a9761e38ffc04b893213536d925b
+Author:     Souvik Saha <tsaha5005@gmail.com>
+AuthorDate: Mon Nov 9 02:00:15 2026 +0530
+CommitDate: Mon Nov 9 02:00:15 2026 +0530
+
+    chore(submission): finalize HackMatrix 2026 submission package, pitch deck, and compliance audit
+
 commit b8465ceffc041758cd25d48780a701df00551ec9
 Author:     Souvik Saha <tsaha5005@gmail.com>
 AuthorDate: Mon Nov 9 01:19:31 2026 +0530
@@ -62,6 +76,8 @@ CommitDate: Mon Nov 9 00:26:58 2026 +0530
 | **Production Serverless Hardening (`8103891`)** | Nov 7 – Nov 10, 2026 | **November 9, 2026 @ 00:42:44 IST** | **Compliant** |
 | **Zero-Config Deployment (`162fb05`)** | Nov 7 – Nov 10, 2026 | **November 9, 2026 @ 01:18:06 IST** | **Compliant** |
 | **Live Verification & Audit (`b8465ce`)** | Nov 7 – Nov 10, 2026 | **November 9, 2026 @ 01:19:31 IST** | **Compliant** |
+| **HackMatrix Submission Package (`a9761e3`)** | Nov 7 – Nov 10, 2026 | **November 9, 2026 @ 02:00:15 IST** | **Compliant** |
+| **Security Hardening & Cleanup (`28d077b`)** | Nov 7 – Nov 10, 2026 | **November 9, 2026 @ 02:17:31 IST** | **Compliant** |
 | **HackMatrix Online Round Closes** | November 10, 2026 @ 10:00 PM IST | — | Pending Deadline |
 
 ### Assessment

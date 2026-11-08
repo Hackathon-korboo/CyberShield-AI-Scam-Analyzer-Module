@@ -47,11 +47,10 @@ CyberShield AI provides a deterministic, multi-layered cyber defense architectur
 ### Project Links & Media Assets
 
 - **Live Web Application:** [https://cybershield-ai-web-roan.vercel.app/](https://cybershield-ai-web-roan.vercel.app/)
+- **Demo Video (YouTube):** [https://www.youtube.com/watch?v=lfhW9cDFUoQ](https://www.youtube.com/watch?v=lfhW9cDFUoQ)
 - **Official GitHub Repository:** [https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module](https://github.com/Hackathon-korboo/CyberShield-AI-Scam-Analyzer-Module)
 - **Live Production API Gateway:** [https://cybershield-ai-api.vercel.app/](https://cybershield-ai-api.vercel.app/)
 - **Interactive Swagger Documentation:** [https://cybershield-ai-api.vercel.app/docs](https://cybershield-ai-api.vercel.app/docs)
-- **Pitch Deck Presentation:** `PENDING — awaiting presentation link from teammate`
-- **Demo Video:** `PENDING — awaiting demo video link from teammate`
 
 ### Application Screenshot
 
@@ -282,7 +281,4 @@ In accordance with HackMatrix hackathon guidelines, all external resources, libr
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.  
-Copyright (c) 2026 CyberShield AI Team. Built for **HackMatrix 2026**.
+*CyberShield AI is licensed under the [MIT License](LICENSE). Copyright (c) 2026 CyberShield AI Team. Built for HackMatrix 2026.*

@@ -93,7 +93,7 @@ When completing the HackMatrix online form:
 - **Live Demo URL:** `https://cybershield-ai-web-roan.vercel.app/`
 - **Track:** AI / Web3 / Cybersecurity & Digital Trust Track *(Pending confirmation in team leader dashboard)*
 - **Problem Statement:** AI-Powered Web Threat Detection & Digital Trust Intelligence
-- **Pitch Deck Link:** `PENDING — awaiting presentation link from teammate` (Prepared slide outline available in `docs/PITCH_DECK_SLIDES.md`)
-- **Demo Video Link:** `PENDING — awaiting demo video link from teammate`
+- **Demo Video Link:** `https://www.youtube.com/watch?v=lfhW9cDFUoQ` (Hackathon Demonstration Walkthrough)
+- **Pitch Deck:** `OPTIONAL — NOT SUBMITTED` (Per team decision based on official HackMatrix guidelines)
 - **Project Documentation Link:** Google Docs / Notion export of [`docs/HACKMATRIX_PROJECT_WRITEUP.md`](HACKMATRIX_PROJECT_WRITEUP.md)
 - **Short Description:** See [`docs/HACKMATRIX_SHORT_DESCRIPTION.md`](HACKMATRIX_SHORT_DESCRIPTION.md)
