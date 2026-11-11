@@ -38,7 +38,7 @@ const AppContent: React.FC = () => {
         </Routes>
       </main>
 
-      <footer className="border-t border-[#dedad2] bg-[#fbf9f5] py-6 mt-12 text-xs text-[#787570] font-mono">
+      <footer className="border-t border-[#dedad2] bg-[#fbf9f5] py-6 mt-12 text-xs text-[#52504c] font-mono">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-[#ff5500]" />
@@ -46,7 +46,7 @@ const AppContent: React.FC = () => {
             <span>&bull;</span>
             <span>Intelligence Before Impact &bull; 2026</span>
           </div>
-          <p className="text-center sm:text-right text-[11px] text-[#787570] max-w-md">
+          <p className="text-center sm:text-right text-[11px] text-[#52504c] max-w-md">
             Disclaimer: Threat intelligence scores are probabilistic. Always correlate findings with internal SIEM and perimeter defenses before taking operational actions.
           </p>
         </div>

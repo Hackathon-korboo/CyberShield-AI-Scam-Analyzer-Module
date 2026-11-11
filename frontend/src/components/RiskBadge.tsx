@@ -17,36 +17,36 @@ export const RiskBadge: React.FC<RiskBadgeProps> = ({
     switch (level) {
       case 'Critical':
         return {
-          bg: 'bg-red-500/10 border-red-500/30 text-red-400',
-          dot: 'bg-red-500',
+          bg: 'bg-red-50 border-red-200 text-red-700 shadow-sm',
+          dot: 'bg-red-600',
           icon: AlertOctagon,
           label: 'Critical Risk'
         };
       case 'High':
         return {
-          bg: 'bg-orange-500/10 border-orange-500/30 text-orange-400',
-          dot: 'bg-orange-500',
+          bg: 'bg-orange-50 border-orange-200 text-orange-700 shadow-sm',
+          dot: 'bg-orange-600',
           icon: ShieldAlert,
           label: 'High Risk'
         };
       case 'Medium':
         return {
-          bg: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
-          dot: 'bg-amber-500',
+          bg: 'bg-amber-50 border-amber-200 text-amber-800 shadow-sm',
+          dot: 'bg-amber-600',
           icon: AlertTriangle,
           label: 'Medium Risk'
         };
       case 'Low':
         return {
-          bg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-          dot: 'bg-emerald-500',
+          bg: 'bg-emerald-50 border-emerald-200 text-emerald-800 shadow-sm',
+          dot: 'bg-emerald-600',
           icon: ShieldCheck,
           label: 'Clean / Low'
         };
       default:
         return {
-          bg: 'bg-slate-500/10 border-slate-500/30 text-slate-400',
-          dot: 'bg-slate-400',
+          bg: 'bg-[#f7f5f0] border-[#dedad2] text-[#52504c] shadow-sm',
+          dot: 'bg-[#52504c]',
           icon: HelpCircle,
           label: 'Unknown'
         };

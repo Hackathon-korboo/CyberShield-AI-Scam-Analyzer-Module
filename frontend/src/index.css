@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #efece6;
+  --foreground: #141416;
+  --card: #ffffff;
+  --card-foreground: #141416;
+  --popover: #ffffff;
+  --popover-foreground: #141416;
+  --primary: #ff5500;
+  --primary-foreground: #ffffff;
+  --secondary: #f7f5f0;
+  --secondary-foreground: #141416;
+  --muted: #f7f5f0;
+  --muted-foreground: #52504c;
+  --border: #dedad2;
+  --input: #dedad2;
+  --ring: #ff5500;
+  --charcoal: #141416;
+  --grid-line: rgba(20, 20, 22, 0.08);
+}
+
 @layer base {
   html, body {
     margin: 0;
@@ -31,3 +51,4 @@
     background: #ff5500;
   }
 }
+

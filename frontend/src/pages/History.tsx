@@ -49,17 +49,17 @@ export const History: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 font-sans">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff5500]/15 text-[#ff5500] border border-[#ff5500]/30 text-xs font-bold uppercase tracking-wider mb-2 font-mono">
             <HistoryIcon size={14} /> Investigation Registry
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#141416]">
             Threat Scan History
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-[#52504c] mt-1 font-medium">
             Audit log of all analyzed URLs, domains, and phishing communications.
           </p>
         </div>
@@ -67,7 +67,7 @@ export const History: React.FC = () => {
         <button
           onClick={fetchScans}
           disabled={loading}
-          className="self-start sm:self-auto px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-2 transition-all"
+          className="self-start sm:self-auto px-4 py-2.5 rounded-xl bg-white border border-[#dedad2] hover:bg-[#f7f5f0] text-xs font-bold text-[#141416] flex items-center gap-2 transition-all shadow-sm cursor-pointer"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Refresh Registry
@@ -75,17 +75,17 @@ export const History: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4">
+      <div className="bg-white border border-[#dedad2] rounded-2xl p-5 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row gap-3">
           {/* Search Input */}
           <form onSubmit={handleSearchSubmit} className="relative flex-grow">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#787570] w-4 h-4" />
             <input
               type="text"
               placeholder="Search by target URL, domain, or preview..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500 font-['JetBrains_Mono']"
+              className="w-full pl-10 pr-4 py-2.5 bg-[#f7f5f0] border border-[#dedad2] rounded-xl text-[#141416] placeholder-[#787570] text-xs focus:outline-none focus:bg-white focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] font-mono shadow-inner"
             />
           </form>
 
@@ -93,7 +93,7 @@ export const History: React.FC = () => {
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 text-xs focus:outline-none focus:border-cyan-500 font-sans"
+            className="px-3.5 py-2.5 bg-[#f7f5f0] border border-[#dedad2] rounded-xl text-[#141416] text-xs focus:outline-none focus:bg-white focus:border-[#ff5500] font-semibold cursor-pointer shadow-xs"
           >
             <option value="All">All Scan Types</option>
             <option value="url">URL Scans</option>
@@ -102,8 +102,8 @@ export const History: React.FC = () => {
         </div>
 
         {/* Risk Level Pills */}
-        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-800/60">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#dedad2]">
+          <span className="text-[11px] font-bold text-[#52504c] uppercase tracking-wider mr-1 font-mono">
             Severity:
           </span>
           {riskFilters.map((risk) => (
@@ -111,33 +111,33 @@ export const History: React.FC = () => {
               key={risk}
               type="button"
               onClick={() => setSelectedRisk(risk)}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 selectedRisk === risk
-                  ? 'bg-cyan-500 text-slate-950 shadow-sm shadow-cyan-500/30'
-                  : 'bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800'
+                  ? 'bg-[#141416] text-white shadow-sm'
+                  : 'bg-[#f7f5f0] text-[#52504c] hover:text-[#141416] hover:bg-white border border-[#dedad2]'
               }`}
             >
               {risk}
             </button>
           ))}
-          <span className="ml-auto text-xs text-slate-500">
-            Found <strong>{total}</strong> investigations
+          <span className="ml-auto text-xs text-[#52504c] font-medium">
+            Found <strong className="text-[#141416] font-bold">{total}</strong> investigations
           </span>
         </div>
       </div>
 
       {/* Scans Table */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-[#dedad2] rounded-2xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="py-20 text-center text-slate-500 text-xs space-y-3">
-            <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p>Loading registry records...</p>
+          <div className="py-20 text-center text-[#52504c] text-xs space-y-3">
+            <div className="w-6 h-6 border-2 border-[#ff5500] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="font-medium">Loading registry records...</p>
           </div>
         ) : scans.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/50 text-slate-400 uppercase font-semibold">
+                <tr className="border-b border-[#dedad2] bg-[#f7f5f0] text-[#52504c] uppercase font-bold">
                   <th className="py-3.5 pl-4">Target / Pretext Preview</th>
                   <th className="py-3.5">Type</th>
                   <th className="py-3.5">Risk Level</th>
@@ -147,31 +147,31 @@ export const History: React.FC = () => {
                   <th className="py-3.5 text-right pr-4">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-['JetBrains_Mono']">
+              <tbody className="divide-y divide-[#dedad2]/70 font-mono">
                 {scans.map((scan) => (
-                  <tr key={scan.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="py-3.5 pl-4 font-medium text-slate-200 max-w-xs truncate">
+                  <tr key={scan.id} className="hover:bg-[#faf8f4] transition-colors">
+                    <td className="py-3.5 pl-4 font-semibold text-[#141416] max-w-xs truncate">
                       {scan.target}
                     </td>
-                    <td className="py-3.5 text-slate-400 font-sans capitalize">
+                    <td className="py-3.5 text-[#52504c] font-sans font-medium capitalize">
                       {scan.scan_type}
                     </td>
                     <td className="py-3.5 font-sans">
                       <RiskBadge level={scan.risk_level} size="sm" />
                     </td>
-                    <td className="py-3.5 font-bold text-slate-300">
+                    <td className="py-3.5 font-bold text-[#141416]">
                       {scan.risk_score}/100
                     </td>
-                    <td className="py-3.5 text-slate-500 text-[11px]">
+                    <td className="py-3.5 text-[#52504c] text-[11px] font-mono">
                       {scan.report_hash ? `${scan.report_hash.slice(0, 14)}...` : 'N/A'}
                     </td>
-                    <td className="py-3.5 text-slate-400 font-sans">
+                    <td className="py-3.5 text-[#52504c] font-sans">
                       {new Date(scan.created_at).toLocaleString()}
                     </td>
                     <td className="py-3.5 text-right pr-4 font-sans">
                       <Link
                         to={`/report/${scan.id}`}
-                        className="px-3 py-1.5 rounded-lg bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-400 border border-cyan-500/20 text-xs font-semibold inline-flex items-center gap-1 transition-all"
+                        className="px-3 py-1.5 rounded-lg bg-[#f7f5f0] hover:bg-white text-[#ff5500] hover:text-[#e04b00] border border-[#dedad2] text-xs font-bold inline-flex items-center gap-1 transition-all shadow-xs"
                       >
                         Dossier <ArrowRight size={11} />
                       </Link>
@@ -182,9 +182,9 @@ export const History: React.FC = () => {
             </table>
           </div>
         ) : (
-          <div className="py-16 text-center text-slate-500 text-xs space-y-2">
-            <FileText size={24} className="mx-auto text-slate-600" />
-            <p className="font-semibold text-slate-400">No matching threat records found</p>
+          <div className="py-16 text-center text-[#52504c] text-xs space-y-2">
+            <FileText size={24} className="mx-auto text-[#787570]" />
+            <p className="font-bold text-[#141416]">No matching threat records found</p>
             <p>Try adjusting your search criteria or run a new scan from the dashboard.</p>
           </div>
         )}

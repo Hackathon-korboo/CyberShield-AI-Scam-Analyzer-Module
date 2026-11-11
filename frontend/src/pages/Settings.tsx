@@ -93,62 +93,62 @@ export const Settings: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans">
       {/* Title */}
       <div>
-        <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff5500]/15 text-[#ff5500] border border-[#ff5500]/30 text-xs font-bold uppercase tracking-wider mb-2 font-mono">
           <SettingsIcon size={14} /> Telemetry &amp; System Configuration
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#141416]">
           Security Providers &amp; Platform Health
         </h1>
-        <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+        <p className="text-sm text-[#52504c] mt-1 max-w-2xl font-medium leading-relaxed">
           Live monitoring of all connected threat intelligence engines, relational databases, AI providers, and cryptographic verification modules.
         </p>
       </div>
 
       {/* Platform Status Overview Card */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8">
-        <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider mb-6 flex items-center gap-2">
-          <Layers size={16} className="text-cyan-400" /> Platform Runtime Diagnostics
+      <div className="bg-white border border-[#dedad2] rounded-2xl p-6 sm:p-8 shadow-sm">
+        <h3 className="text-sm font-bold text-[#141416] uppercase tracking-wider mb-6 flex items-center gap-2 font-mono">
+          <Layers size={16} className="text-[#ff5500]" /> Platform Runtime Diagnostics
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-            <span className="text-slate-500 font-semibold block uppercase text-[10px]">Overall Health</span>
+          <div className="p-4 bg-[#f7f5f0] border border-[#dedad2] rounded-xl space-y-1">
+            <span className="text-[#52504c] font-bold block uppercase text-[10px] font-mono">Overall Health</span>
             <div className="flex items-center gap-2 pt-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-slate-100 font-bold uppercase tracking-wider">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[#141416] font-bold uppercase tracking-wider">
                 {system?.status || 'Online'}
               </span>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-            <span className="text-slate-500 font-semibold block uppercase text-[10px]">Database Engine</span>
+          <div className="p-4 bg-[#f7f5f0] border border-[#dedad2] rounded-xl space-y-1">
+            <span className="text-[#52504c] font-bold block uppercase text-[10px] font-mono">Database Engine</span>
             <div className="flex items-center gap-2 pt-1">
-              <Database size={15} className="text-cyan-400" />
-              <span className="text-slate-100 font-bold font-['JetBrains_Mono']">
+              <Database size={15} className="text-[#ff5500]" />
+              <span className="text-[#141416] font-bold font-mono">
                 {system?.database_type || 'Active'}
               </span>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-            <span className="text-slate-500 font-semibold block uppercase text-[10px]">Software Build</span>
+          <div className="p-4 bg-[#f7f5f0] border border-[#dedad2] rounded-xl space-y-1">
+            <span className="text-[#52504c] font-bold block uppercase text-[10px] font-mono">Software Build</span>
             <div className="flex items-center gap-2 pt-1">
-              <Terminal size={15} className="text-violet-400" />
-              <span className="text-slate-100 font-bold font-['JetBrains_Mono']">
+              <Terminal size={15} className="text-[#141416]" />
+              <span className="text-[#141416] font-bold font-mono">
                 v{system?.app_version || '1.0.0'}
               </span>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-            <span className="text-slate-500 font-semibold block uppercase text-[10px]">Operating Mode</span>
+          <div className="p-4 bg-[#f7f5f0] border border-[#dedad2] rounded-xl space-y-1">
+            <span className="text-[#52504c] font-bold block uppercase text-[10px] font-mono">Operating Mode</span>
             <div className="flex items-center gap-2 pt-1">
-              <Cpu size={15} className="text-amber-400" />
-              <span className="text-slate-100 font-bold capitalize">
+              <Cpu size={15} className="text-amber-600" />
+              <span className="text-[#141416] font-bold capitalize">
                 {system?.environment || 'Development'}
               </span>
             </div>
@@ -158,8 +158,8 @@ export const Settings: React.FC = () => {
 
       {/* Provider Status Matrix */}
       <div className="space-y-4">
-        <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-          <Key size={18} className="text-cyan-400" /> External API &amp; Credential Configuration Matrix
+        <h3 className="text-base font-bold text-[#141416] flex items-center gap-2 font-mono">
+          <Key size={18} className="text-[#ff5500]" /> External API &amp; Credential Configuration Matrix
         </h3>
 
         <div className="grid grid-cols-1 gap-4">
@@ -170,34 +170,34 @@ export const Settings: React.FC = () => {
             return (
               <div
                 key={g.name}
-                className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-slate-700/80 transition-all"
+                className="bg-white border border-[#dedad2] rounded-2xl p-6 hover:border-[#141416]/20 transition-all shadow-sm"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#dedad2]">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-cyan-400">
+                    <div className="p-2.5 rounded-xl bg-[#f7f5f0] border border-[#dedad2] text-[#ff5500]">
                       <Shield size={20} />
                     </div>
                     <div>
-                      <h4 className="text-base font-bold text-slate-100">{g.name}</h4>
-                      <span className="text-xs text-slate-400 font-['JetBrains_Mono']">{g.env}</span>
+                      <h4 className="text-base font-bold text-[#141416]">{g.name}</h4>
+                      <span className="text-xs text-[#52504c] font-mono font-semibold">{g.env}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                         isConfigured
-                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                          : 'bg-slate-800 text-slate-400 border border-slate-700'
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                          : 'bg-[#f7f5f0] text-[#52504c] border border-[#dedad2]'
                       }`}
                     >
                       {isConfigured ? (
                         <>
-                          <CheckCircle2 size={13} /> Configured
+                          <CheckCircle2 size={13} className="text-emerald-600" /> Configured
                         </>
                       ) : (
                         <>
-                          <AlertCircle size={13} /> Active Fallback Mode
+                          <AlertCircle size={13} className="text-amber-600" /> Active Fallback Mode
                         </>
                       )}
                     </span>
@@ -205,7 +205,7 @@ export const Settings: React.FC = () => {
                       href={g.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold inline-flex items-center gap-1 transition-colors"
+                      className="px-3.5 py-1.5 rounded-lg bg-[#f7f5f0] hover:bg-white text-[#141416] border border-[#dedad2] text-xs font-bold inline-flex items-center gap-1 transition-colors shadow-xs"
                     >
                       Portal <ExternalLink size={12} />
                     </a>
@@ -214,18 +214,18 @@ export const Settings: React.FC = () => {
 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                   <div className="space-y-1.5">
-                    <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                    <span className="text-[#52504c] font-bold uppercase tracking-wider text-[10px] font-mono">
                       Access &amp; Pricing
                     </span>
-                    <p className="text-slate-300 leading-relaxed">{g.tier}</p>
-                    <p className="text-slate-400 mt-2">{g.guide}</p>
+                    <p className="text-[#141416] font-medium leading-relaxed">{g.tier}</p>
+                    <p className="text-[#52504c] mt-2 font-medium">{g.guide}</p>
                   </div>
 
-                  <div className="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800/60 space-y-1">
-                    <span className="text-cyan-400 font-bold uppercase tracking-wider text-[10px] flex items-center gap-1">
-                      <HelpCircle size={12} /> Fallback Resilience Behavior
+                  <div className="p-3.5 bg-[#f7f5f0] rounded-xl border border-[#dedad2] space-y-1">
+                    <span className="text-[#141416] font-bold uppercase tracking-wider text-[10px] flex items-center gap-1 font-mono">
+                      <HelpCircle size={12} className="text-[#ff5500]" /> Fallback Resilience Behavior
                     </span>
-                    <p className="text-slate-300 leading-relaxed text-[11px] pt-1">
+                    <p className="text-[#52504c] leading-relaxed text-[11px] pt-1 font-medium">
                       {g.fallback}
                     </p>
                   </div>

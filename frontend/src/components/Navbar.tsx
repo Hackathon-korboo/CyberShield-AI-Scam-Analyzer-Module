@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
                   v2.0
                 </span>
               </div>
-              <p className="text-[10px] text-[#787570] font-medium hidden sm:block uppercase">
+              <p className="text-[10px] text-[#52504c] font-medium hidden sm:block uppercase">
                 Thinking Security Intelligence
               </p>
             </div>
@@ -46,14 +46,14 @@ export const Navbar: React.FC = () => {
                   to={item.path}
                   end={item.path === '/'}
                   className={({ isActive }) =>
-                    `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium uppercase tracking-wider transition-all ${
+                    `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all ${
                       isActive
                         ? item.highlight
                           ? 'bg-[#ff5500]/15 text-[#ff5500] border border-[#ff5500]/40 font-bold'
-                          : 'bg-white text-[#141416] border border-[#dedad2] shadow-sm'
+                          : 'bg-white text-[#141416] border border-[#dedad2] shadow-sm font-bold'
                         : item.highlight
                         ? 'text-[#ff5500] hover:bg-[#ff5500]/10 border border-transparent'
-                        : 'text-[#787570] hover:text-[#141416] hover:bg-white/60 border border-transparent'
+                        : 'text-[#52504c] hover:text-[#141416] hover:bg-white/60 border border-transparent'
                     }`
                   }
                 >

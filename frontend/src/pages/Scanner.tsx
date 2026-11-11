@@ -62,37 +62,37 @@ export const Scanner: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans">
       {/* Page Title & Intro */}
       <div>
-        <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff5500]/15 text-[#ff5500] border border-[#ff5500]/30 text-xs font-bold uppercase tracking-wider mb-2 font-mono">
           <Shield size={14} /> Multi-Provider Threat Evaluation
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100">
-          URL & Domain Reputation Scanner
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#141416]">
+          URL &amp; Domain Reputation Scanner
         </h1>
-        <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+        <p className="text-sm text-[#52504c] mt-1 max-w-2xl font-medium leading-relaxed">
           Queries threat intelligence feeds without downloading or executing the target.
           Evaluates malicious payloads, domain heuristics, and outputs a tamper-evident risk report.
         </p>
       </div>
 
       {/* Input Box Card */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8">
+      <div className="bg-white border border-[#dedad2] rounded-2xl p-6 sm:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#787570] w-5 h-5" />
             <input
               type="text"
               placeholder="Enter URL, hostname, or IP (e.g., https://login-verify-account.top/auth)"
               value={inputUrl}
               onChange={(e) => setInputUrl(e.target.value)}
-              className="w-full pl-12 pr-32 py-4 bg-slate-950/90 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 font-['JetBrains_Mono'] transition-all"
+              className="w-full pl-12 pr-32 py-4 bg-[#f7f5f0] border border-[#dedad2] rounded-xl text-[#141416] placeholder-[#787570] text-sm focus:outline-none focus:bg-white focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] font-mono transition-all shadow-inner"
             />
             <button
               type="submit"
               disabled={loading || !inputUrl.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-lg flex items-center gap-2 shadow-md shadow-cyan-600/20 transition-all disabled:opacity-50"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2.5 bg-[#ff5500] hover:bg-[#e04b00] text-white text-xs font-bold rounded-lg flex items-center gap-2 shadow-sm transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -108,8 +108,8 @@ export const Scanner: React.FC = () => {
           </div>
 
           {/* Quick presets */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 text-xs text-slate-400">
-            <span className="font-semibold text-slate-500">Quick Test Samples:</span>
+          <div className="flex flex-wrap items-center gap-2 pt-2 text-xs text-[#52504c]">
+            <span className="font-bold text-[#141416]">Quick Test Samples:</span>
             {samples.map((s) => (
               <button
                 key={s.label}
@@ -118,7 +118,7 @@ export const Scanner: React.FC = () => {
                   setInputUrl(s.url);
                   executeScan(s.url);
                 }}
-                className="px-2.5 py-1 rounded-md bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700 transition-colors"
+                className="px-2.5 py-1 rounded-md bg-[#f7f5f0] hover:bg-white text-[#141416] border border-[#dedad2] font-medium transition-colors cursor-pointer shadow-xs"
               >
                 {s.label}
               </button>
@@ -127,8 +127,8 @@ export const Scanner: React.FC = () => {
         </form>
 
         {error && (
-          <div className="mt-4 p-4 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 text-xs flex items-center gap-2.5">
-            <AlertTriangle size={16} className="shrink-0 text-red-400" />
+          <div className="mt-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5 font-medium">
+            <AlertTriangle size={16} className="shrink-0 text-red-600" />
             <span>{error}</span>
           </div>
         )}
@@ -136,16 +136,16 @@ export const Scanner: React.FC = () => {
 
       {/* Loading Radar Animation */}
       {loading && (
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-12 text-center space-y-4">
+        <div className="bg-white border border-[#dedad2] rounded-2xl p-12 text-center space-y-4 shadow-sm">
           <div className="relative w-16 h-16 mx-auto">
-            <div className="absolute inset-0 rounded-full border-2 border-cyan-500/20 animate-ping" />
-            <div className="w-16 h-16 rounded-full border-2 border-cyan-500/40 border-t-cyan-400 animate-spin flex items-center justify-center">
-              <Shield className="w-6 h-6 text-cyan-400" />
+            <div className="absolute inset-0 rounded-full border-2 border-[#ff5500]/20 animate-ping" />
+            <div className="w-16 h-16 rounded-full border-2 border-[#ff5500]/30 border-t-[#ff5500] animate-spin flex items-center justify-center">
+              <Shield className="w-6 h-6 text-[#ff5500]" />
             </div>
           </div>
           <div>
-            <h4 className="text-base font-bold text-slate-100">Analyzing Target Destination</h4>
-            <p className="text-xs text-slate-400 mt-1">
+            <h4 className="text-base font-bold text-[#141416]">Analyzing Target Destination</h4>
+            <p className="text-xs text-[#52504c] mt-1 font-medium">
               Normalizing URL syntax &bull; Interrogating URLhaus &amp; PhishTank &bull; Evaluating heuristics
             </p>
           </div>
@@ -156,45 +156,45 @@ export const Scanner: React.FC = () => {
       {result && !loading && (
         <div className="space-y-8">
           {/* Target Overview Card */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8">
+          <div className="bg-white border border-[#dedad2] rounded-2xl p-6 sm:p-8 shadow-sm">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
               <div className="lg:col-span-2 space-y-4">
                 <div className="flex flex-wrap items-center gap-3">
                   <RiskBadge level={result.risk_level} size="lg" />
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 capitalize">
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#f7f5f0] text-[#141416] border border-[#dedad2] capitalize">
                     {result.scan_type} Target
                   </span>
                   {(result.domain?.endsWith('.example') || result.hostname?.endsWith('.example') || result.domain?.endsWith('.test')) && (
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-sky-50 text-sky-800 border border-sky-200">
                       RFC 2606 Reserved Test Domain
                     </span>
                   )}
-                  <span className="text-xs text-slate-400">
-                    Scan ID: <span className="font-['JetBrains_Mono']">{result.scan_id.slice(0, 8)}...</span>
+                  <span className="text-xs text-[#52504c] font-medium">
+                    Scan ID: <span className="font-mono font-bold text-[#141416]">{result.scan_id.slice(0, 8)}...</span>
                   </span>
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-[11px] font-bold text-[#52504c] uppercase tracking-wider block mb-1">
                     Defanged Target (Safe for Display)
                   </label>
-                  <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl font-['JetBrains_Mono'] text-xs text-cyan-300 break-all select-all">
+                  <div className="p-3.5 bg-[#f7f5f0] border border-[#dedad2] rounded-xl font-mono text-xs text-[#141416] font-semibold break-all select-all">
                     {result.normalized_target || result.target}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs pt-1">
-                  <div className="p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
-                    <span className="text-slate-500 block text-[10px] uppercase font-semibold">Domain</span>
-                    <span className="text-slate-200 font-['JetBrains_Mono']">{result.domain || 'N/A'}</span>
+                  <div className="p-3 bg-[#f7f5f0] rounded-xl border border-[#dedad2]">
+                    <span className="text-[#52504c] block text-[10px] uppercase font-bold">Domain</span>
+                    <span className="text-[#141416] font-mono font-semibold break-all">{result.domain || 'N/A'}</span>
                   </div>
-                  <div className="p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
-                    <span className="text-slate-500 block text-[10px] uppercase font-semibold">Hostname</span>
-                    <span className="text-slate-200 font-['JetBrains_Mono']">{result.hostname || 'N/A'}</span>
+                  <div className="p-3 bg-[#f7f5f0] rounded-xl border border-[#dedad2]">
+                    <span className="text-[#52504c] block text-[10px] uppercase font-bold">Hostname</span>
+                    <span className="text-[#141416] font-mono font-semibold break-all">{result.hostname || 'N/A'}</span>
                   </div>
-                  <div className="p-2.5 bg-slate-950/60 rounded-lg border border-slate-800 col-span-2 sm:col-span-1">
-                    <span className="text-slate-500 block text-[10px] uppercase font-semibold">Triage Status</span>
-                    <span className="text-emerald-400 font-semibold uppercase">{result.status}</span>
+                  <div className="p-3 bg-[#f7f5f0] rounded-xl border border-[#dedad2] col-span-2 sm:col-span-1">
+                    <span className="text-[#52504c] block text-[10px] uppercase font-bold">Triage Status</span>
+                    <span className="text-emerald-700 font-bold uppercase">{result.status}</span>
                   </div>
                 </div>
               </div>
@@ -207,50 +207,50 @@ export const Scanner: React.FC = () => {
           </div>
 
           {/* Intelligence Feeds Breakdown */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-            <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Server size={16} className="text-cyan-400" /> Threat Intelligence Provider Findings
+          <div className="bg-white border border-[#dedad2] rounded-2xl p-6 shadow-sm">
+            <h3 className="text-sm font-bold text-[#141416] uppercase tracking-wider mb-4 flex items-center gap-2">
+              <Server size={16} className="text-[#ff5500]" /> Threat Intelligence Provider Findings
             </h3>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-xl border border-[#dedad2]">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-slate-800 text-slate-400 uppercase font-semibold">
-                    <th className="pb-3 pl-2">Security Provider</th>
-                    <th className="pb-3">Query Verdict</th>
-                    <th className="pb-3">Confidence Status</th>
-                    <th className="pb-3">Reference Link</th>
-                    <th className="pb-3 text-right pr-2">Granular Details</th>
+                  <tr className="border-b border-[#dedad2] bg-[#f7f5f0] text-[#52504c] uppercase font-bold">
+                    <th className="py-3.5 pl-3">Security Provider</th>
+                    <th className="py-3.5">Query Verdict</th>
+                    <th className="py-3.5">Confidence Status</th>
+                    <th className="py-3.5">Reference Link</th>
+                    <th className="py-3.5 text-right pr-3">Granular Details</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-[#dedad2]/70 font-sans">
                   {result.providers_checked.map((prov) => (
-                    <tr key={prov.provider} className="hover:bg-slate-800/20">
-                      <td className="py-3.5 pl-2 font-bold text-slate-200">{prov.provider}</td>
+                    <tr key={prov.provider} className="hover:bg-[#faf8f4] transition-colors">
+                      <td className="py-3.5 pl-3 font-bold text-[#141416]">{prov.provider}</td>
                       <td className="py-3.5">
                         {prov.matched ? (
-                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-red-500/20 text-red-400 border border-red-500/30">
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-red-50 text-red-700 border border-red-200">
                             Threat Match Found
                           </span>
                         ) : prov.status === 'clean' ? (
-                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                             No Match (Clean)
                           </span>
                         ) : prov.status === 'not_configured' ? (
-                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-400">
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-stone-100 text-stone-700 border border-stone-200">
                             Key Not Configured
                           </span>
                         ) : prov.status === 'skipped_synthetic' ? (
-                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-sky-500/20 text-sky-400 border border-sky-500/30">
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-200">
                             Reserved / Test Domain
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                          <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
                             {prov.status}
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 text-slate-400">
+                      <td className="py-3.5 text-[#52504c] font-medium">
                         {prov.verified ? 'Analyst / Feed Verified' : 'Community / Unverified'}
                       </td>
                       <td className="py-3.5">
@@ -259,15 +259,15 @@ export const Scanner: React.FC = () => {
                             href={prov.reference}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-cyan-400 hover:underline inline-flex items-center gap-1"
+                            className="text-[#ff5500] hover:text-[#e04b00] hover:underline inline-flex items-center gap-1 font-bold"
                           >
                             Intel Dossier <ExternalLink size={11} />
                           </a>
                         ) : (
-                          <span className="text-slate-600">None</span>
+                          <span className="text-[#52504c]">None</span>
                         )}
                       </td>
-                      <td className="py-3.5 text-right pr-2 font-['JetBrains_Mono'] text-[11px] text-slate-400">
+                      <td className="py-3.5 text-right pr-3 font-mono text-[11px] text-[#52504c]">
                         {prov.details?.threat || prov.details?.query_status || JSON.stringify(prov.details || {})}
                       </td>
                     </tr>
@@ -280,39 +280,39 @@ export const Scanner: React.FC = () => {
           {/* Evidence and Recommendations Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Evidence Card */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-              <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <AlertTriangle size={16} className="text-amber-400" /> Evidence &amp; Detection Indicators
+            <div className="bg-white border border-[#dedad2] rounded-2xl p-6 shadow-sm">
+              <h3 className="text-sm font-bold text-[#141416] uppercase tracking-wider mb-4 flex items-center gap-2">
+                <AlertTriangle size={16} className="text-amber-600" /> Evidence &amp; Detection Indicators
               </h3>
               {result.report.evidence.length > 0 ? (
                 <ul className="space-y-2.5">
                   {result.report.evidence.map((ev, idx) => (
                     <li
                       key={idx}
-                      className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-300 flex items-start gap-2.5"
+                      className="p-3 rounded-xl bg-[#f7f5f0] border border-[#dedad2] text-xs text-[#141416] flex items-start gap-2.5 font-medium"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500] mt-1.5 shrink-0" />
                       <span>{ev}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-xs text-slate-500">No adverse evidence detected for this target.</p>
+                <p className="text-xs text-[#52504c] font-medium">No adverse evidence detected for this target.</p>
               )}
             </div>
 
             {/* Recommendations Card */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-              <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-emerald-400" /> Recommended Cybersecurity Actions
+            <div className="bg-white border border-[#dedad2] rounded-2xl p-6 shadow-sm">
+              <h3 className="text-sm font-bold text-[#141416] uppercase tracking-wider mb-4 flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-emerald-600" /> Recommended Cybersecurity Actions
               </h3>
               <ul className="space-y-2.5">
                 {result.report.recommendations.map((rec, idx) => (
                   <li
                     key={idx}
-                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-300 flex items-start gap-2.5"
+                    className="p-3 rounded-xl bg-[#f7f5f0] border border-[#dedad2] text-xs text-[#141416] flex items-start gap-2.5 font-medium"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 shrink-0" />
                     <span>{rec}</span>
                   </li>
                 ))}

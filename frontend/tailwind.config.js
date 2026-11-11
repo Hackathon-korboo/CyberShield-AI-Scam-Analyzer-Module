@@ -7,6 +7,25 @@ export default {
   theme: {
     extend: {
       colors: {
+        paper: {
+          DEFAULT: '#efece6',
+          canvas: '#efece6',
+          card: '#ffffff',
+          subtle: '#f7f5f0',
+          border: '#dedad2',
+          muted: '#52504c',
+          text: '#141416',
+        },
+        charcoal: {
+          DEFAULT: '#141416',
+          surface: '#18181b',
+          border: '#27272a',
+        },
+        brand: {
+          orange: '#ff5500',
+          coral: '#ff6b1a',
+          dark: '#141416',
+        },
         cyber: {
           dark: '#0a0d14',
           card: '#111726',
@@ -24,3 +43,4 @@ export default {
   },
   plugins: [],
 }
+
