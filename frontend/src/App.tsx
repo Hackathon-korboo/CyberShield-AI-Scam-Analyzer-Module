@@ -7,6 +7,12 @@ import { MessageAnalyzer } from './pages/MessageAnalyzer';
 import { History } from './pages/History';
 import { ReportDetail } from './pages/ReportDetail';
 import { Settings } from './pages/Settings';
+import ThreatGraph from './pages/ThreatGraph';
+import GoldenHour from './pages/GoldenHour';
+import QRAnalyzer from './pages/QRAnalyzer';
+import EmailAuthenticator from './pages/EmailAuthenticator';
+import DomainIntelligence from './pages/DomainIntelligence';
+import CommunityRepository from './pages/CommunityRepository';
 import { CyberShieldExperience } from './components/robot/CyberShieldExperience';
 import { Shield } from 'lucide-react';
 
@@ -30,11 +36,23 @@ const AppContent: React.FC = () => {
       <main className="flex-grow">
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/overview" element={<Dashboard />} />
           <Route path="/scanner" element={<Scanner />} />
+          <Route path="/investigate" element={<Scanner />} />
           <Route path="/message-analyzer" element={<MessageAnalyzer />} />
           <Route path="/history" element={<History />} />
+          <Route path="/reports" element={<History />} />
           <Route path="/report/:id" element={<ReportDetail />} />
+          <Route path="/reports/:id" element={<ReportDetail />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/graph" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><ThreatGraph /></div>} />
+          <Route path="/intelligence" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><ThreatGraph /></div>} />
+          <Route path="/golden-hour" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><GoldenHour /></div>} />
+          <Route path="/protection" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><GoldenHour /></div>} />
+          <Route path="/qr" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><QRAnalyzer /></div>} />
+          <Route path="/email" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><EmailAuthenticator /></div>} />
+          <Route path="/domain" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><DomainIntelligence /></div>} />
+          <Route path="/community" element={<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><CommunityRepository /></div>} />
         </Routes>
       </main>
 

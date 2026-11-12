@@ -291,6 +291,21 @@ class ScannerService:
         db.refresh(scan)
         db.refresh(report)
 
+        # Core Innovation 1: Ingest into Evidence Relationship Graph
+        try:
+            from app.services.nexus.graph_service import ThreatGraphService
+            resolved_ips = getattr(getattr(technical, "dns", None), "resolved_ips", []) if technical else []
+            ThreatGraphService.ingest_scan(
+                db=db,
+                scan_id=scan.id,
+                scan_type="url",
+                target=normalized_url,
+                risk_level=final_risk_level,
+                technical_data={"resolved_ips": resolved_ips}
+            )
+        except Exception as g_err:
+            logger.warning(f"Non-fatal threat graph ingestion: {g_err}")
+
         return ScanDetailResponse(
             scan_id=scan.id,
             scan_type=scan.scan_type,

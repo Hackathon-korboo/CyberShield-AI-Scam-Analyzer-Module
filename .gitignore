@@ -51,4 +51,5 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+RESTORE_PRE_NEXUS.bat
 

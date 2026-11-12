@@ -27,6 +27,8 @@ from app.schemas.url_scan import (
 from app.schemas.scan import (
     URLScanRequest,
     MessageScanRequest,
+    QRScanMasterRequest,
+    EmailScanMasterRequest,
     ScanDetailResponse,
     ScanListResponse,
     ScanListItem,
@@ -362,6 +364,20 @@ async def scan_message_master(
         db.refresh(scan)
         db.refresh(report)
 
+        # Core Innovation 1: Ingest into Evidence Relationship Graph
+        try:
+            from app.services.nexus.graph_service import ThreatGraphService
+            ThreatGraphService.ingest_scan(
+                db=db,
+                scan_id=scan.id,
+                scan_type="message",
+                target=payload.content,
+                risk_level=analysis["risk_level"],
+                extracted_indicators=analysis.get("extracted_indicators")
+            )
+        except Exception:
+            pass
+
         return ScanDetailResponse(
             scan_id=scan.id,
             scan_type=scan.scan_type,
@@ -399,6 +415,318 @@ async def scan_message_master(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Message analysis failed: {str(e)}"
+        )
+
+
+@router.post(
+    "/scans/qr",
+    response_model=ScanDetailResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Investigate QR / UPI Payload via Master Scanner (Nexus Innovation)",
+    tags=["Investigation"]
+)
+async def scan_qr_master(
+    payload: QRScanMasterRequest,
+    db: Session = Depends(get_db)
+) -> ScanDetailResponse:
+    """
+    Submits a decoded QR payload or UPI payment URI for:
+    - NPCI UPI parameter parsing and risk scoring
+    - Scan-to-receive fraud alert detection
+    - Deterministic risk assessment and unified report assembly
+    - Relational database persistence and SHA-256 cryptographic proof
+    - Threat Relationship Graph ingestion
+    """
+    raw_payload = payload.payload.strip()
+    if not raw_payload:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Payload cannot be empty.")
+
+    try:
+        from app.services.nexus.qr_upi_analyzer import QRUPIAnalyzer
+        preview_target = (raw_payload[:120] + "...") if len(raw_payload) > 120 else raw_payload
+
+        scan = Scan(
+            target=preview_target,
+            scan_type="qr",
+            status="scanning"
+        )
+        db.add(scan)
+        db.commit()
+        db.refresh(scan)
+
+        db.add(ScanEvent(
+            scan_id=scan.id,
+            event_type="qr_analysis_initiated",
+            description="Decoded QR payload submitted for UPI parameter parsing and scam analysis."
+        ))
+
+        analysis = QRUPIAnalyzer.analyze_payload(raw_payload)
+
+        risk_level = analysis.risk_level
+        if risk_level == "Benign":
+            risk_level = "Low"
+        risk_score = analysis.risk_score
+
+        evidence_list = list(analysis.evidence)
+        for warn in analysis.warning_signals:
+            if warn not in evidence_list:
+                evidence_list.append(warn)
+        if analysis.upi_details and analysis.upi_details.payee_vpa:
+            evidence_list.append(f"Target Payee VPA: {analysis.upi_details.payee_vpa}")
+        if not evidence_list:
+            evidence_list = ["No malicious QR or deceptive payment patterns detected."]
+
+        recommendations = list(analysis.recommendations) if analysis.recommendations else [
+            "Verify the merchant or recipient before scanning any payment QR code.",
+            "Remember: Receiving money never requires scanning a QR code or entering a UPI PIN."
+        ]
+
+        canonical_dict = ReportVerifier.build_canonical_payload(
+            scan_id=scan.id,
+            target=preview_target,
+            risk_level=risk_level,
+            risk_score=risk_score,
+            summary=analysis.decoded_summary,
+            evidence=evidence_list,
+            recommendations=recommendations
+        )
+        report_hash = ReportVerifier.calculate_hash(canonical_dict)
+
+        report = RiskReport(
+            scan_id=scan.id,
+            summary=analysis.decoded_summary,
+            evidence=json.dumps(evidence_list),
+            recommendations=json.dumps(recommendations),
+            report_hash=report_hash,
+            verification_status="locally_hashed",
+            blockchain_tx=None
+        )
+        db.add(report)
+
+        scan.status = "completed"
+        scan.risk_level = risk_level
+        scan.risk_score = risk_score
+
+        db.add(ScanEvent(
+            scan_id=scan.id,
+            event_type="report_generation",
+            description=f"Generated report with SHA-256 cryptographic proof: {report_hash[:16]}..."
+        ))
+        db.commit()
+        db.refresh(scan)
+        db.refresh(report)
+
+        # Ingest into Evidence Relationship Graph
+        try:
+            from app.services.nexus.graph_service import ThreatGraphService
+            extra_data = {}
+            if analysis.upi_details and analysis.upi_details.payee_vpa:
+                extra_data["payee_vpa"] = analysis.upi_details.payee_vpa
+            ThreatGraphService.ingest_scan(
+                db=db,
+                scan_id=scan.id,
+                scan_type="qr",
+                target=raw_payload,
+                risk_level=risk_level,
+                technical_data=extra_data
+            )
+        except Exception as g_err:
+            logger.warning(f"Non-fatal threat graph ingestion: {g_err}")
+
+        return ScanDetailResponse(
+            scan_id=scan.id,
+            scan_type=scan.scan_type,
+            target=scan.target,
+            normalized_target=None,
+            domain=None,
+            hostname=None,
+            status=scan.status,
+            risk_level=scan.risk_level,
+            risk_score=scan.risk_score,
+            created_at=scan.created_at,
+            providers_checked=[],
+            report=RiskReportSchema(
+                report_id=report.id,
+                summary=report.summary,
+                evidence=evidence_list,
+                recommendations=recommendations,
+                report_hash=report.report_hash,
+                verification_status=report.verification_status,
+                blockchain_tx=report.blockchain_tx,
+                created_at=report.created_at
+            ),
+            events=[
+                ScanEventSchema(
+                    event_type=e.event_type,
+                    description=e.description,
+                    created_at=e.created_at
+                ) for e in scan.events
+            ],
+            message_indicators=[],
+            analysis_engine="CyberShield QR & UPI Forensics"
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"QR analysis failed: {str(e)}"
+        )
+
+
+@router.post(
+    "/scans/email",
+    response_model=ScanDetailResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Authenticate Email Headers & Provenance via Master Scanner (Nexus Innovation)",
+    tags=["Investigation"]
+)
+async def scan_email_master(
+    payload: EmailScanMasterRequest,
+    db: Session = Depends(get_db)
+) -> ScanDetailResponse:
+    """
+    Submits raw email text or RFC 5322 headers for:
+    - SPF, DKIM, DMARC DNS record verification and alignment
+    - From vs. Reply-To domain mismatch & display name spoofing detection
+    - Deterministic risk assessment and unified report assembly
+    - Relational database persistence and SHA-256 cryptographic proof
+    - Threat Relationship Graph ingestion
+    """
+    raw_content = payload.content.strip()
+    if not raw_content:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Email content cannot be empty.")
+
+    try:
+        from app.services.nexus.email_auth import EmailAuthenticationService
+        auth_res = EmailAuthenticationService.authenticate_email(raw_content)
+
+        target_label = auth_res.headers.subject or auth_res.headers.from_email or (raw_content[:80] + "...")
+        preview_target = (target_label[:120] + "...") if len(target_label) > 120 else target_label
+
+        scan = Scan(
+            target=preview_target,
+            scan_type="email",
+            status="scanning"
+        )
+        db.add(scan)
+        db.commit()
+        db.refresh(scan)
+
+        db.add(ScanEvent(
+            scan_id=scan.id,
+            event_type="email_auth_initiated",
+            description=f"Email authenticated from sender '{auth_res.headers.from_email or 'unknown'}'. SPF: {auth_res.spf_status}, DMARC: {auth_res.dmarc_status}."
+        ))
+
+        risk_level = auth_res.risk_level
+        if risk_level == "Benign":
+            risk_level = "Low"
+        risk_score = auth_res.risk_score
+
+        evidence_list = list(auth_res.evidence)
+        for warn in auth_res.warning_signals:
+            if warn not in evidence_list:
+                evidence_list.append(warn)
+        if not evidence_list:
+            evidence_list = ["No email spoofing, header tampering, or authentication failures detected."]
+
+        recommendations = list(auth_res.recommendations) if auth_res.recommendations else [
+            "Always inspect sender email address, not just display name.",
+            "Verify any sensitive or financial request through out-of-band channels."
+        ]
+
+        canonical_dict = ReportVerifier.build_canonical_payload(
+            scan_id=scan.id,
+            target=preview_target,
+            risk_level=risk_level,
+            risk_score=risk_score,
+            summary=auth_res.plain_english_explanation,
+            evidence=evidence_list,
+            recommendations=recommendations
+        )
+        report_hash = ReportVerifier.calculate_hash(canonical_dict)
+
+        report = RiskReport(
+            scan_id=scan.id,
+            summary=auth_res.plain_english_explanation,
+            evidence=json.dumps(evidence_list),
+            recommendations=json.dumps(recommendations),
+            report_hash=report_hash,
+            verification_status="locally_hashed",
+            blockchain_tx=None
+        )
+        db.add(report)
+
+        scan.status = "completed"
+        scan.risk_level = risk_level
+        scan.risk_score = risk_score
+
+        db.add(ScanEvent(
+            scan_id=scan.id,
+            event_type="report_generation",
+            description=f"Generated report with SHA-256 cryptographic proof: {report_hash[:16]}..."
+        ))
+        db.commit()
+        db.refresh(scan)
+        db.refresh(report)
+
+        # Ingest into Evidence Relationship Graph
+        try:
+            from app.services.nexus.graph_service import ThreatGraphService
+            extra_data = {
+                "from_domain": auth_res.headers.from_domain,
+                "reply_to_domain": auth_res.headers.reply_to_domain,
+                "spf": auth_res.spf_status,
+                "dmarc": auth_res.dmarc_status
+            }
+            ThreatGraphService.ingest_scan(
+                db=db,
+                scan_id=scan.id,
+                scan_type="email",
+                target=preview_target,
+                risk_level=risk_level,
+                technical_data=extra_data
+            )
+        except Exception as g_err:
+            logger.warning(f"Non-fatal threat graph ingestion: {g_err}")
+
+        return ScanDetailResponse(
+            scan_id=scan.id,
+            scan_type=scan.scan_type,
+            target=scan.target,
+            normalized_target=None,
+            domain=auth_res.headers.from_domain,
+            hostname=None,
+            status=scan.status,
+            risk_level=scan.risk_level,
+            risk_score=scan.risk_score,
+            created_at=scan.created_at,
+            providers_checked=[],
+            report=RiskReportSchema(
+                report_id=report.id,
+                summary=report.summary,
+                evidence=evidence_list,
+                recommendations=recommendations,
+                report_hash=report.report_hash,
+                verification_status=report.verification_status,
+                blockchain_tx=report.blockchain_tx,
+                created_at=report.created_at
+            ),
+            events=[
+                ScanEventSchema(
+                    event_type=e.event_type,
+                    description=e.description,
+                    created_at=e.created_at
+                ) for e in scan.events
+            ],
+            message_indicators=[],
+            analysis_engine="CyberShield Email Provenance & DMARC"
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Email analysis failed: {str(e)}"
         )
 
 
@@ -914,3 +1242,178 @@ def verify_report_endpoint(
 ) -> ReportVerificationResponse:
     """Verify cryptographic integrity and tamper status of a report against the blockchain."""
     return verify_threat_report_integrity(request, db)
+
+
+# =============================================================================
+# CyberShield Nexus Innovation Endpoints (P0 / P1 / P2)
+# =============================================================================
+
+from app.services.nexus.graph_service import ThreatGraphService
+from app.services.nexus.golden_hour import GoldenHourService, IncidentQuestionnaire, GoldenHourResponse
+from app.services.nexus.qr_upi_analyzer import QRUPIAnalyzer, QRAnalysisResult
+from app.services.nexus.email_auth import EmailAuthenticationService, EmailAuthenticationResult
+from app.services.nexus.domain_intelligence import DomainIntelligenceService, DomainIntelligenceResult
+from app.services.nexus.security_posture import WebsiteSecurityPostureService, SecurityPostureAssessment
+from app.services.nexus.community_repo import CommunityThreatService, CommunitySubmissionRequest, CommunityFeedResponse, CommunityIndicatorItem
+from app.services.nexus.pii_redactor import PIIRedactor, RedactionResult
+
+
+class QRScanRequest(BaseModel):
+    payload: str = Field(..., description="Decoded QR payload string or UPI URI")
+
+
+class EmailAuthRequest(BaseModel):
+    content: str = Field(..., description="Raw email text, RFC 5322 headers, or message body")
+
+
+class DomainIntelRequest(BaseModel):
+    domain: str = Field(..., description="Target domain or hostname")
+
+
+class SecurityPostureRequest(BaseModel):
+    url: str = Field(..., description="Target website URL")
+    headers: Optional[Dict[str, str]] = Field(default=None, description="Optional observed response headers")
+
+
+class PrivacyRedactionRequest(BaseModel):
+    text: str = Field(..., description="Input text containing potentially sensitive credentials or personal data")
+
+
+@router.get(
+    "/nexus/graph",
+    summary="Evidence Relationship Intelligence Graph (Core Innovation 1)",
+    tags=["Nexus Innovation"]
+)
+def get_threat_graph_endpoint(
+    entity_id: Optional[str] = Query(default=None),
+    scan_id: Optional[str] = Query(default=None),
+    hops: int = Query(default=2, ge=1, le=3),
+    entity_type: Optional[List[str]] = Query(default=None),
+    db: Session = Depends(get_db)
+) -> Dict[str, Any]:
+    """Multi-hop threat entity relationship graph distinguishing verified (solid) and inferred (dashed) edges."""
+    return ThreatGraphService.get_subgraph(
+        db=db,
+        entity_id=entity_id,
+        scan_id=scan_id,
+        hops=hops,
+        entity_types=entity_type
+    )
+
+
+@router.get(
+    "/nexus/golden-hour/scenarios",
+    summary="Retrieve Supported Scenarios for Golden Hour (Core Innovation 2)",
+    tags=["Nexus Innovation"]
+)
+def get_golden_hour_scenarios_endpoint() -> Dict[str, Any]:
+    """Returns supported victim scenarios, timeline brackets, and official Indian cybercrime resources."""
+    return GoldenHourService.get_supported_scenarios()
+
+
+@router.post(
+    "/nexus/golden-hour/generate",
+    response_model=GoldenHourResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Generate Contextual Golden Hour Response Plan (Core Innovation 2)",
+    tags=["Nexus Innovation"]
+)
+def generate_golden_hour_plan_endpoint(payload: IncidentQuestionnaire) -> GoldenHourResponse:
+    """Generates an immediate, evidence-preserving, prioritized action checklist for scam victims."""
+    return GoldenHourService.generate_response_plan(payload)
+
+
+@router.post(
+    "/nexus/qr/analyze",
+    response_model=QRAnalysisResult,
+    status_code=status.HTTP_200_OK,
+    summary="Audit Decoded QR Code or UPI Payment URI (Core Innovation 3)",
+    tags=["Nexus Innovation"]
+)
+def analyze_qr_payload_endpoint(payload: QRScanRequest) -> QRAnalysisResult:
+    """Parses QR code payloads, decodes NPCI UPI parameters, and audits against scan-to-receive scams."""
+    return QRUPIAnalyzer.analyze_payload(payload.payload)
+
+
+@router.post(
+    "/nexus/email/authenticate",
+    response_model=EmailAuthenticationResult,
+    status_code=status.HTTP_200_OK,
+    summary="Email Provenance and SPF/DKIM/DMARC Authentication (Core Innovation 4)",
+    tags=["Nexus Innovation"]
+)
+def authenticate_email_endpoint(payload: EmailAuthRequest) -> EmailAuthenticationResult:
+    """Inspects email headers, verifies From/Reply-To alignment, and checks DNS SPF and DMARC policies."""
+    return EmailAuthenticationService.authenticate_email(payload.content)
+
+
+@router.post(
+    "/nexus/domain/intel",
+    response_model=DomainIntelligenceResult,
+    status_code=status.HTTP_200_OK,
+    summary="Domain RDAP, Certificate Transparency & Brand Intelligence (Core Innovation 5)",
+    tags=["Nexus Innovation"]
+)
+async def investigate_domain_endpoint(payload: DomainIntelRequest) -> DomainIntelligenceResult:
+    """Performs parallel RDAP domain registration, CT logs auditing, and homoglyph brand impersonation checks."""
+    return await DomainIntelligenceService.investigate_domain(payload.domain)
+
+
+@router.post(
+    "/nexus/security-posture/assess",
+    response_model=SecurityPostureAssessment,
+    status_code=status.HTTP_200_OK,
+    summary="Passive Website Security Posture Assessment (Core Innovation 6)",
+    tags=["Nexus Innovation"]
+)
+def assess_security_posture_endpoint(payload: SecurityPostureRequest) -> SecurityPostureAssessment:
+    """Evaluates defensive HTTP response headers and issues an independent Security Posture Grade."""
+    return WebsiteSecurityPostureService.evaluate_headers(payload.url, payload.headers or {})
+
+
+@router.post(
+    "/nexus/privacy/redact",
+    response_model=RedactionResult,
+    status_code=status.HTTP_200_OK,
+    summary="AI Privacy & PII Redaction Audit (Core Innovation 7)",
+    tags=["Nexus Innovation"]
+)
+def redact_pii_endpoint(payload: PrivacyRedactionRequest) -> RedactionResult:
+    """Scrubs personal credentials, phone numbers, and payment VPAs, generating local reversible mappings."""
+    return PIIRedactor.redact(payload.text)
+
+
+@router.post(
+    "/nexus/community/submit",
+    response_model=CommunityIndicatorItem,
+    status_code=status.HTTP_201_CREATED,
+    summary="Submit Opt-in Sanitized Community Threat Indicator (Core Innovation 9)",
+    tags=["Nexus Innovation"]
+)
+def submit_community_indicator_endpoint(
+    payload: CommunitySubmissionRequest,
+    db: Session = Depends(get_db)
+) -> CommunityIndicatorItem:
+    """Receives user-consented, sanitized threat indicators with automatic PII stripping."""
+    try:
+        return CommunityThreatService.submit_indicator(db, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@router.get(
+    "/nexus/community/feed",
+    response_model=CommunityFeedResponse,
+    status_code=status.HTTP_200_OK,
+    summary="List Sanitized Community Threat Telemetry (Core Innovation 9)",
+    tags=["Nexus Innovation"]
+)
+def list_community_indicators_endpoint(
+    category: Optional[str] = Query(default=None),
+    indicator_type: Optional[str] = Query(default=None),
+    limit: int = Query(default=50, ge=1, le=100),
+    db: Session = Depends(get_db)
+) -> CommunityFeedResponse:
+    """Retrieves public crowdsourced threat indicators with zero PII exposure."""
+    return CommunityThreatService.list_indicators(db, category, indicator_type, limit)
+

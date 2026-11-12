@@ -9,6 +9,7 @@ import logging
 from typing import Any, Dict, List, Optional
 from app.core.config import settings
 from app.schemas.scan import MessageIndicator
+from app.services.nexus.pii_redactor import PIIRedactor
 from app.services.ai_engine import (
     AnalyzeMessageRequest,
     AnalyzeMessageResponse,
@@ -48,6 +49,7 @@ class MessageAnalyzerService:
         """
         Main analysis method invoked by API routes.
         Runs full analysis with LLM failover, prompt injection defense, and grounding.
+        Applies privacy-preserving PII redaction before external LLM dispatch.
         """
         analyzer = cls.get_analyzer()
         m_type = MessageTypeEnum.OTHER
@@ -57,7 +59,11 @@ class MessageAnalyzerService:
             except Exception:
                 m_type = MessageTypeEnum.OTHER
 
-        request = AnalyzeMessageRequest(message=content, message_type=m_type)
+        # Core Innovation 7: Redact sensitive personal data before dispatching to external LLMs
+        redaction = PIIRedactor.redact(content)
+        safe_message_for_llm = redaction.redacted_text if redaction.redaction_applied else content
+
+        request = AnalyzeMessageRequest(message=safe_message_for_llm, message_type=m_type)
 
         try:
             m2_response, engine_name = await analyzer.analyze(request)
@@ -71,7 +77,20 @@ class MessageAnalyzerService:
                 fallback_reason=f"Exception recovery: {str(exc)}",
             )
 
-        return cls._adapt_to_master_schema(m2_response, engine_name, content)
+        adapted = cls._adapt_to_master_schema(m2_response, engine_name, content)
+        adapted["pii_redacted"] = redaction.redaction_applied
+        adapted["redactions_count"] = redaction.redaction_count
+        adapted["entity_counts"] = redaction.entity_counts
+
+        # Restore any placeholders in evidence for authorized local display
+        if redaction.redaction_applied:
+            restored_evidence = [
+                PIIRedactor.restore_evidence(e, redaction.local_mapping)
+                for e in adapted["evidence"]
+            ]
+            adapted["evidence"] = restored_evidence
+
+        return adapted
 
     @classmethod
     def _adapt_to_master_schema(

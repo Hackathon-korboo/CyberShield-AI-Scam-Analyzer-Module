@@ -11,6 +11,14 @@ class MessageScanRequest(BaseModel):
     content: str = Field(..., min_length=3, max_length=50000, description="Email body, SMS, or message text")
 
 
+class QRScanMasterRequest(BaseModel):
+    payload: str = Field(..., min_length=1, max_length=10000, description="Decoded QR payload string or UPI URI")
+
+
+class EmailScanMasterRequest(BaseModel):
+    content: str = Field(..., min_length=3, max_length=100000, description="Raw email text, RFC 5322 headers, or message body")
+
+
 class MessageIndicator(BaseModel):
     category: str
     severity: str

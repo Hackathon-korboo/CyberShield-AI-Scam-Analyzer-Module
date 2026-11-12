@@ -139,3 +139,53 @@ class ScanEvent(Base):
     created_at = Column(DateTime(timezone=True), default=utc_now)
 
     scan = relationship("Scan", back_populates="events")
+
+
+class ThreatEntity(Base):
+    """Entity node in the CyberShield Nexus Threat Relationship Graph."""
+
+    __tablename__ = "threat_entities"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    entity_type = Column(String(32), nullable=False, index=True)  # url, domain, ip, phone, email, upi, brand, scan
+    entity_value = Column(String(2048), nullable=False, index=True)
+    canonical_value = Column(String(2048), nullable=False, index=True)
+    risk_level = Column(String(32), default="Unknown", nullable=False)
+    scan_id = Column(String(36), ForeignKey("scans.id", ondelete="SET NULL"), nullable=True)
+    metadata_json = Column(Text, nullable=True)  # JSON-encoded extra attributes
+    first_seen = Column(DateTime(timezone=True), default=utc_now)
+    last_seen = Column(DateTime(timezone=True), default=utc_now)
+
+
+class ThreatRelationship(Base):
+    """Directed/undirected correlation edge connecting entities in the Threat Graph."""
+
+    __tablename__ = "threat_relationships"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    source_entity_id = Column(String(36), ForeignKey("threat_entities.id", ondelete="CASCADE"), nullable=False, index=True)
+    target_entity_id = Column(String(36), ForeignKey("threat_entities.id", ondelete="CASCADE"), nullable=False, index=True)
+    relationship_type = Column(String(64), nullable=False, index=True)
+    is_verified = Column(Boolean, default=False, nullable=False)  # True = Solid edge (verified), False = Dashed edge (inferred)
+    confidence = Column(Integer, default=100)  # 0 - 100
+    evidence_reference = Column(Text, nullable=True)
+    source_report_id = Column(String(64), nullable=True)
+    detected_at = Column(DateTime(timezone=True), default=utc_now)
+
+
+class CommunityThreatReport(Base):
+    """Opt-in, privacy-preserving community threat indicators submitted by users."""
+
+    __tablename__ = "community_threat_reports"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    indicator_type = Column(String(32), nullable=False, index=True)  # url, domain, ip, upi_vpa, phone_hash
+    indicator_value = Column(String(2048), nullable=False)  # Defanged / normalized indicator
+    category = Column(String(64), nullable=False)  # phishing, financial_fraud, malware, fake_lottery, upi_scam
+    severity = Column(String(32), nullable=False, default="High")
+    reporter_notes = Column(Text, nullable=True)
+    source_scan_id = Column(String(36), ForeignKey("scans.id", ondelete="SET NULL"), nullable=True)
+    upvotes = Column(Integer, default=1)
+    status = Column(String(32), default="active", nullable=False)  # active, flagged, reviewed
+    submitted_at = Column(DateTime(timezone=True), default=utc_now)
+
