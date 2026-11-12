@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
   Search,
@@ -13,13 +13,20 @@ import {
   Mail,
   Globe,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Camera,
+  Image as ImageIcon,
+  Smartphone,
+  Check
 } from 'lucide-react';
 import { scanUrl, scanMessage, scanQRMaster, scanEmailMaster } from '../services/api';
 import { ScanDetail } from '../types';
 import { RiskBadge } from '../components/RiskBadge';
 import { ScoreGauge } from '../components/ScoreGauge';
 import { VerificationCard } from '../components/VerificationCard';
+import { decodeQRFromImage } from '../utils/qrDecoder';
+import { CrossDeviceHandoffModal } from '../components/CrossDeviceHandoffModal';
+import { MobileUploadPortal } from '../components/MobileUploadPortal';
 
 type Channel = 'url' | 'message' | 'qr' | 'email';
 
@@ -30,6 +37,17 @@ export const Scanner: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScanDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Photo Upload & Mobile Handoff States
+  const [handoffOpen, setHandoffOpen] = useState(false);
+  const [decodingPhoto, setDecodingPhoto] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [decodedNotice, setDecodedNotice] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check if this instance is loaded on a mobile phone via handoff QR
+  const isMobileUpload = searchParams.get('mode') === 'mobile_upload';
+  const sessionIdParam = searchParams.get('session');
 
   // Sample quick test buttons per channel
   const samplesByChannel: Record<Channel, { label: string; payload: string }[]> = {
@@ -90,6 +108,8 @@ Your billing statement for this cycle is ready to view in the Cloud Console.`
   };
 
   useEffect(() => {
+    if (isMobileUpload) return;
+
     const tabParam = searchParams.get('tab') as Channel | null;
     if (tabParam && ['url', 'message', 'qr', 'email'].includes(tabParam)) {
       setChannel(tabParam);
@@ -117,7 +137,17 @@ Your billing statement for this cycle is ready to view in the Cloud Console.`
       setInputVal(emailParam);
       executeScan('email', emailParam);
     }
-  }, [searchParams]);
+  }, [searchParams, isMobileUpload]);
+
+  // If accessed from a mobile phone scanning the pairing QR code:
+  if (isMobileUpload && sessionIdParam) {
+    return (
+      <MobileUploadPortal
+        sessionId={sessionIdParam}
+        onClose={() => setSearchParams({})}
+      />
+    );
+  }
 
   const executeScan = async (activeChannel: Channel, targetText: string) => {
     if (!targetText.trim()) return;
@@ -156,11 +186,81 @@ Your billing statement for this cycle is ready to view in the Cloud Console.`
     setChannel(c);
     setInputVal('');
     setError(null);
+    setPhotoError(null);
+    setDecodedNotice(null);
     setSearchParams({ tab: c });
+  };
+
+  // Process image selected from same device (Laptop gallery/files)
+  const handlePhotoFileSelected = async (file: File) => {
+    setDecodingPhoto(true);
+    setPhotoError(null);
+    setDecodedNotice(null);
+
+    try {
+      const decoded = await decodeQRFromImage(file);
+      setInputVal(decoded);
+      setDecodedNotice(decoded);
+
+      let targetChan: Channel = channel;
+      if (decoded.startsWith('upi://') || decoded.includes('pa=')) {
+        targetChan = 'qr';
+        setChannel('qr');
+      } else if (decoded.startsWith('http://') || decoded.startsWith('https://') || !decoded.includes(' ')) {
+        targetChan = 'url';
+        setChannel('url');
+      }
+
+      executeScan(targetChan, decoded);
+    } catch (err: any) {
+      setPhotoError(
+        err?.message ||
+        'No QR code detected in this photo. Please ensure the QR code is clearly visible and in focus.'
+      );
+    } finally {
+      setDecodingPhoto(false);
+    }
+  };
+
+  // Process target received from phone via CrossDeviceHandoffModal
+  const handleMobilePayloadReceived = (payload: string) => {
+    setInputVal(payload);
+    setDecodedNotice(`Received from Phone: ${payload}`);
+
+    let targetChan: Channel = channel;
+    if (payload.startsWith('upi://') || payload.includes('pa=')) {
+      targetChan = 'qr';
+      setChannel('qr');
+    } else if (payload.startsWith('http://') || payload.startsWith('https://') || !payload.includes(' ')) {
+      targetChan = 'url';
+      setChannel('url');
+    }
+
+    executeScan(targetChan, payload);
   };
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans">
+      {/* Hidden File Picker for Laptop Photo Upload */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            handlePhotoFileSelected(e.target.files[0]);
+          }
+        }}
+      />
+
+      {/* Cross-Device Pairing Modal */}
+      <CrossDeviceHandoffModal
+        isOpen={handoffOpen}
+        onClose={() => setHandoffOpen(false)}
+        onPayloadReceived={handleMobilePayloadReceived}
+      />
+
       {/* Page Title & Intro */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -235,6 +335,72 @@ Your billing statement for this cycle is ready to view in the Cloud Console.`
             <span>Email Authenticator</span>
           </button>
         </div>
+
+        {/* Cross-Device & Photo Upload Strip (Laptop Gallery vs Phone Camera) */}
+        <div className="p-3.5 bg-[#f7f5f0] border border-[#dedad2] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#141416]">
+            <Camera size={16} className="text-[#ff5500]" />
+            <span>Image / QR Scanning Options:</span>
+            <span className="text-[11px] font-normal text-[#52504c] hidden md:inline">
+              Upload screenshot from laptop or scan with phone
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={decodingPhoto}
+              className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg bg-white hover:bg-[#faf8f4] text-[#141416] border border-[#dedad2] text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+            >
+              <ImageIcon size={13} className="text-[#ff5500]" />
+              <span>{decodingPhoto ? 'Reading Image...' : 'Browse a Photo / Gallery'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setHandoffOpen(true)}
+              className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg bg-[#141416] hover:bg-black text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+            >
+              <Smartphone size={13} className="text-[#ff5500]" />
+              <span>Scan with Phone</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Decoded Notice / Success Pill */}
+        {decodedNotice && (
+          <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs text-emerald-900 flex items-center justify-between gap-2 font-mono">
+            <div className="flex items-center gap-2 truncate">
+              <Check size={14} className="text-emerald-700 shrink-0" />
+              <span className="font-bold">Decoded from Photo:</span>
+              <span className="truncate">{decodedNotice}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDecodedNotice(null)}
+              className="text-[10px] text-emerald-700 hover:underline uppercase font-bold shrink-0"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
+        {photoError && (
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center justify-between gap-2 font-mono">
+            <div className="flex items-center gap-2">
+              <AlertTriangle size={14} className="shrink-0" />
+              <span>{photoError}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setPhotoError(null)}
+              className="text-[10px] text-red-700 hover:underline uppercase font-bold shrink-0"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
 
         {/* Input Form */}
         <form onSubmit={handleSubmit} className="space-y-4">

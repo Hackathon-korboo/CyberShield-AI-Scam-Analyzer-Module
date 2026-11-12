@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   AlertTriangle, 
   ShieldCheck, 
   CreditCard, 
-  CheckCircle2
+  CheckCircle2,
+  Camera,
+  Image as ImageIcon,
+  Smartphone,
+  Check
 } from 'lucide-react';
 import { analyzeQR } from '../services/api';
 import { QRAnalysisResult } from '../types';
 import { RiskBadge } from '../components/RiskBadge';
 import { ScoreGauge } from '../components/ScoreGauge';
+import { decodeQRFromImage } from '../utils/qrDecoder';
+import { CrossDeviceHandoffModal } from '../components/CrossDeviceHandoffModal';
 
 const QRAnalyzer: React.FC = () => {
   const [payloadInput, setPayloadInput] = useState<string>(
@@ -18,12 +24,18 @@ const QRAnalyzer: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleAnalyze = async () => {
-    if (!payloadInput.trim()) return;
+  // Photo browse & Mobile QR handoff state
+  const [handoffOpen, setHandoffOpen] = useState<boolean>(false);
+  const [decodingPhoto, setDecodingPhoto] = useState<boolean>(false);
+  const [decodedNotice, setDecodedNotice] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const executeAnalysis = async (targetPayload: string) => {
+    if (!targetPayload.trim()) return;
     try {
       setLoading(true);
       setError(null);
-      const res = await analyzeQR(payloadInput.trim());
+      const res = await analyzeQR(targetPayload.trim());
       setResult(res);
     } catch (err: any) {
       setError(err?.response?.data?.detail || err?.message || 'Failed to analyze QR payload.');
@@ -32,13 +44,62 @@ const QRAnalyzer: React.FC = () => {
     }
   };
 
+  const handleAnalyze = async () => {
+    executeAnalysis(payloadInput);
+  };
+
   const applyPreset = (presetText: string) => {
     setPayloadInput(presetText);
     setResult(null);
   };
 
+  const handlePhotoFileSelected = async (file: File) => {
+    setDecodingPhoto(true);
+    setError(null);
+    setDecodedNotice(null);
+
+    try {
+      const decoded = await decodeQRFromImage(file);
+      setPayloadInput(decoded);
+      setDecodedNotice(decoded);
+      executeAnalysis(decoded);
+    } catch (err: any) {
+      setError(
+        err?.message ||
+        'No QR code detected in this photo. Please ensure the QR code is clearly visible and in focus.'
+      );
+    } finally {
+      setDecodingPhoto(false);
+    }
+  };
+
+  const handleMobilePayloadReceived = (payload: string) => {
+    setPayloadInput(payload);
+    setDecodedNotice(`Received from Phone: ${payload}`);
+    executeAnalysis(payload);
+  };
+
   return (
     <div className="space-y-6">
+      {/* Hidden File Picker for Laptop Photo Upload */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            handlePhotoFileSelected(e.target.files[0]);
+          }
+        }}
+      />
+
+      {/* Cross-Device Pairing Modal */}
+      <CrossDeviceHandoffModal
+        isOpen={handoffOpen}
+        onClose={() => setHandoffOpen(false)}
+        onPayloadReceived={handleMobilePayloadReceived}
+      />
       {/* Header */}
       {error && (
         <div className="p-3 bg-red-100 border border-red-300 text-red-800 text-xs rounded-lg font-semibold">
@@ -61,6 +122,56 @@ const QRAnalyzer: React.FC = () => {
 
       {/* Input & Presets */}
       <div className="bg-white p-6 rounded-xl border border-[#e5e2dc] shadow-sm space-y-4">
+        {/* Cross-Device & Photo Upload Strip (Laptop Gallery vs Phone Camera) */}
+        <div className="p-3.5 bg-[#f7f5f0] border border-[#dedad2] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#141416]">
+            <Camera size={16} className="text-[#ff5500]" />
+            <span>Image / QR Scanning Options:</span>
+            <span className="text-[11px] font-normal text-[#52504c] hidden md:inline">
+              Upload screenshot from laptop or scan with phone
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={decodingPhoto}
+              className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg bg-white hover:bg-[#faf8f4] text-[#141416] border border-[#dedad2] text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+            >
+              <ImageIcon size={13} className="text-[#ff5500]" />
+              <span>{decodingPhoto ? 'Reading Image...' : 'Browse a Photo / Gallery'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setHandoffOpen(true)}
+              className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg bg-[#141416] hover:bg-black text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+            >
+              <Smartphone size={13} className="text-[#ff5500]" />
+              <span>Scan with Phone</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Decoded Notice / Success Pill */}
+        {decodedNotice && (
+          <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs text-emerald-900 flex items-center justify-between gap-2 font-mono">
+            <div className="flex items-center gap-2 truncate">
+              <Check size={14} className="text-emerald-700 shrink-0" />
+              <span className="font-bold">Decoded from Photo:</span>
+              <span className="truncate">{decodedNotice}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDecodedNotice(null)}
+              className="text-[10px] text-emerald-700 hover:underline uppercase font-bold shrink-0 cursor-pointer"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
         <div>
           <label className="block text-xs font-bold text-[#1c1a17] uppercase tracking-wider mb-2">
             Decoded QR Payload or UPI Payment URI

@@ -164,4 +164,28 @@ export const getCommunityFeed = async (params?: {
   return response.data;
 };
 
+export interface SessionSyncData {
+  session_id: string;
+  status: 'waiting' | 'ready' | 'expired';
+  payload?: string | null;
+  source_device?: string | null;
+  created_at: number;
+  updated_at: number;
+}
+
+export const publishSessionSync = async (data: {
+  session_id: string;
+  payload: string;
+  source_device?: string;
+  image_preview?: string;
+}): Promise<SessionSyncData> => {
+  const response = await api.post<SessionSyncData>('/session/sync', data);
+  return response.data;
+};
+
+export const getSessionSyncStatus = async (sessionId: string): Promise<SessionSyncData> => {
+  const response = await api.get<SessionSyncData>(`/session/sync/${sessionId}`);
+  return response.data;
+};
+
 export default api;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Shield,
@@ -19,8 +19,13 @@ import {
   Lock,
   ExternalLink,
   Sparkles,
-  ArrowUpRight
+  ArrowUpRight,
+  Camera,
+  Image as ImageIcon,
+  Smartphone
 } from 'lucide-react';
+import { decodeQRFromImage } from '../utils/qrDecoder';
+import { CrossDeviceHandoffModal } from '../components/CrossDeviceHandoffModal';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import {
   getStats,
@@ -56,6 +61,9 @@ export const Dashboard: React.FC = () => {
   const [inputVal, setInputVal] = useState('');
   const [scanning, setScanning] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
+  const [handoffOpen, setHandoffOpen] = useState(false);
+  const [decodingPhoto, setDecodingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Sample quick test payloads for easy testing by judges/users
   const samplesByTab: Record<LauncherTab, { label: string; payload: string }[]> = {
@@ -135,6 +143,61 @@ Your billing statement for this cycle is ready to view in the Cloud Console.`
     };
     fetchData();
   }, []);
+
+  const launchScanWithPayload = async (targetPayload: string, preferredTab?: LauncherTab) => {
+    let tab = preferredTab || activeTab;
+    if (!preferredTab) {
+      if (targetPayload.startsWith('upi://') || targetPayload.includes('pa=')) {
+        tab = 'qr';
+        setActiveTab('qr');
+      } else if (targetPayload.startsWith('http://') || targetPayload.startsWith('https://') || !targetPayload.includes(' ')) {
+        tab = 'url';
+        setActiveTab('url');
+      }
+    }
+    setInputVal(targetPayload);
+    setScanning(true);
+    setScanError(null);
+
+    try {
+      let res;
+      if (tab === 'url') {
+        res = await scanUrl(targetPayload);
+      } else if (tab === 'message') {
+        res = await scanMessage(targetPayload);
+      } else if (tab === 'qr') {
+        res = await scanQRMaster(targetPayload);
+      } else {
+        res = await scanEmailMaster(targetPayload);
+      }
+
+      if (res && res.scan_id) {
+        navigate(`/report/${res.scan_id}`);
+      }
+    } catch (err: any) {
+      setScanError(
+        err?.response?.data?.detail ||
+        'Investigation failed. Please check target syntax or try again.'
+      );
+      setScanning(false);
+    }
+  };
+
+  const handlePhotoFileSelected = async (file: File) => {
+    setDecodingPhoto(true);
+    setScanError(null);
+    try {
+      const decoded = await decodeQRFromImage(file);
+      await launchScanWithPayload(decoded);
+    } catch (err: any) {
+      setScanError(
+        err?.message ||
+        'No readable QR code found in this photo. Please ensure the QR code is clearly visible.'
+      );
+    } finally {
+      setDecodingPhoto(false);
+    }
+  };
 
   const handleUnifiedLaunch = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -269,6 +332,58 @@ Your billing statement for this cycle is ready to view in the Cloud Console.`
             >
               <Mail size={13} /> Email Headers
             </button>
+          </div>
+
+          {/* Hidden File Picker for Laptop Photo Upload */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                handlePhotoFileSelected(e.target.files[0]);
+              }
+            }}
+          />
+
+          {/* Cross-Device Phone Handoff Modal */}
+          <CrossDeviceHandoffModal
+            isOpen={handoffOpen}
+            onClose={() => setHandoffOpen(false)}
+            onPayloadReceived={(payload) => launchScanWithPayload(payload)}
+          />
+
+          {/* Cross-Device & Photo Upload Strip */}
+          <div className="mb-4 p-3 bg-[#1c1a17] border border-[#3f3e3a] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs text-[#dedad2]">
+            <div className="flex items-center gap-2">
+              <Camera size={15} className="text-[#ff5500]" />
+              <span className="font-bold text-white">Scan Image or Phone:</span>
+              <span className="text-[11px] text-[#a8a29e] hidden md:inline">
+                Upload from laptop gallery or scan with mobile camera
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={decodingPhoto}
+                className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/10 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <ImageIcon size={13} className="text-[#ff5500]" />
+                <span>{decodingPhoto ? 'Reading...' : 'Browse Photo'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setHandoffOpen(true)}
+                className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg bg-[#ff5500] hover:bg-[#e04b00] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+              >
+                <Smartphone size={13} />
+                <span>Scan with Phone</span>
+              </button>
+            </div>
           </div>
 
           {/* Launcher Input Form */}

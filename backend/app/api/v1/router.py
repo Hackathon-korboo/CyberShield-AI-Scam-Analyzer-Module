@@ -9,6 +9,7 @@ Consolidates all endpoints for:
 
 from datetime import datetime, timezone
 import json
+import time
 from typing import Dict, Any, List, Optional
 from fastapi import APIRouter, HTTPException, status, Depends, Query, Request
 from pydantic import BaseModel, Field
@@ -1416,4 +1417,80 @@ def list_community_indicators_endpoint(
 ) -> CommunityFeedResponse:
     """Retrieves public crowdsourced threat indicators with zero PII exposure."""
     return CommunityThreatService.list_indicators(db, category, indicator_type, limit)
+
+
+# =============================================================================
+# Cross-Device Mobile Handoff & Session Sync
+# =============================================================================
+
+class SessionSyncRequest(BaseModel):
+    session_id: str = Field(..., min_length=4, max_length=64)
+    payload: str = Field(..., max_length=100000)
+    source_device: Optional[str] = Field(default="mobile")
+    image_preview: Optional[str] = Field(default=None)
+
+
+class SessionSyncResponse(BaseModel):
+    session_id: str
+    status: str  # 'waiting', 'ready', 'expired'
+    payload: Optional[str] = None
+    source_device: Optional[str] = None
+    created_at: float
+    updated_at: float
+
+
+# In-memory transient session store with automatic TTL expiration
+_DEVICE_SYNC_SESSIONS: Dict[str, Dict[str, Any]] = {}
+
+
+@router.post(
+    "/session/sync",
+    response_model=SessionSyncResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Publish Mobile Upload to Active Desktop Session",
+    tags=["Cross-Device Sync"]
+)
+def publish_session_payload(req: SessionSyncRequest) -> SessionSyncResponse:
+    """Receives target payload or decoded QR/image from phone and pairs with active desktop session."""
+    now = time.time()
+    # Clean up sessions older than 30 minutes
+    expired = [k for k, v in _DEVICE_SYNC_SESSIONS.items() if now - v.get("created_at", 0) > 1800]
+    for k in expired:
+        _DEVICE_SYNC_SESSIONS.pop(k, None)
+
+    session_entry = {
+        "session_id": req.session_id,
+        "status": "ready",
+        "payload": req.payload,
+        "source_device": req.source_device,
+        "image_preview": req.image_preview,
+        "created_at": _DEVICE_SYNC_SESSIONS.get(req.session_id, {}).get("created_at", now),
+        "updated_at": now
+    }
+    _DEVICE_SYNC_SESSIONS[req.session_id] = session_entry
+    return SessionSyncResponse(**session_entry)
+
+
+@router.get(
+    "/session/sync/{session_id}",
+    response_model=SessionSyncResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Poll Session Status for Mobile Handoff",
+    tags=["Cross-Device Sync"]
+)
+def get_session_status(session_id: str) -> SessionSyncResponse:
+    """Allows desktop workspace to poll for mobile upload completion."""
+    now = time.time()
+    session = _DEVICE_SYNC_SESSIONS.get(session_id)
+    if not session:
+        return SessionSyncResponse(
+            session_id=session_id,
+            status="waiting",
+            payload=None,
+            source_device=None,
+            created_at=now,
+            updated_at=now
+        )
+    return SessionSyncResponse(**session)
+
 
